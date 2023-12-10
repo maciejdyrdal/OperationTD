@@ -1,5 +1,6 @@
-//Using SDL and standard IO
 #include <plog/Log.h>
+#include <plog/Appenders/ConsoleAppender.h>
+#include <plog/Formatters/TxtFormatter.h>
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <SDL.h>
 #include <iostream>
@@ -10,13 +11,15 @@ constexpr int SCREEN_HEIGHT = 480;
 
 int main(int argc, char* args[])
 {
-	//Initialize the logger
-	plog::init(plog::debug, "log.txt");
+	//Initialize the logger (both to the text file and the console)
+	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
+
 	PLOG_INFO << "Starting app...";
 
 	//The window we'll be rendering to
 	SDL_Window* window = NULL;
-
+	
 	//The surface contained by the window
 	SDL_Surface* screenSurface = NULL;
 
