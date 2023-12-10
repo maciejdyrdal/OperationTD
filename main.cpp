@@ -27,7 +27,7 @@ int main(int argc, char* args[])
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << '\n';
-		PLOG_DEBUG << "SDL could not initialize! SDL_Error: " << SDL_GetError() << '\n';
+		PLOG_ERROR << "SDL could not initialize! SDL_Error: " << SDL_GetError() << '\n';
 	}
 	else
 	{
@@ -36,7 +36,7 @@ int main(int argc, char* args[])
 		if (window == NULL)
 		{
 			std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
-			PLOG_DEBUG << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
+			PLOG_ERROR << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
 		}
 		else
 		{

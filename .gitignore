@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Project log file
 log.txt
+
+# libs folder
+libs/
