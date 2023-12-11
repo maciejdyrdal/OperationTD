@@ -366,7 +366,10 @@ FodyWeavers.xsd
 log.txt
 
 # libs folder contents
-libs/*
+#libs/*
 
 # but not the folder itself
-!libs/.gitkeep
+#!libs/.gitkeep
+
+## TEST - don't ignore external library files 
+!libs/

@@ -14,7 +14,7 @@ SDL_Surface* g_ScreenSurface = NULL;
 
 //The image we will load and show on the screen
 SDL_Surface* g_HelloWorld = NULL;
-
+ 
 bool init()
 {
 	//Initialization flag
