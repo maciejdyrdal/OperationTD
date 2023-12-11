@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -74,8 +74,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Maciek\Projects\OperationTD\libs\plog\include;C:\Users\Maciek\Projects\OperationTD\libs\SDL2-2.28.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Maciek\Projects\OperationTD\libs\SDL2-2.28.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\libs\plog\include;$(ProjectDir)\libs\SDL2-2.28.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\libs\SDL2-2.28.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

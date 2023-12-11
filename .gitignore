@@ -365,5 +365,8 @@ FodyWeavers.xsd
 # Project log file
 log.txt
 
-# libs folder
-libs/
+# libs folder contents
+libs/*
+
+# but not the folder itself
+!libs/.gitkeep
