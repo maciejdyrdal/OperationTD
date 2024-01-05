@@ -1,14 +1,10 @@
 #include "GameState.h"
 
-GameState::GameState(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* groundTexture)
-	:m_Window{window}, m_Renderer{renderer}, m_GroundTexture{groundTexture} {}
+GameState::GameState(SDL_Window* window, SDL_Renderer* renderer)
+	:m_Window{window}, m_Renderer{renderer} {}
 
 GameState::~GameState()
 {
-	//Free loaded image
-	SDL_DestroyTexture(m_GroundTexture);
-	m_GroundTexture = NULL;
-
 	//Destroy window
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_DestroyWindow(m_Window);

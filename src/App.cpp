@@ -72,13 +72,28 @@ bool loadMedia(GameState& gameState)
 	//Loading success flag
 	bool successfullyLoaded = true;
 
-	//Load PNG texture
-	gameState.m_GroundTexture = loadTexture("img/ground.png", gameState);
-	if (gameState.m_GroundTexture == NULL)
+	//Filenames of textures to be loaded
+	std::vector<std::string> textureFilenames{ "ground.png", "character.png" };
+
+	//Load all textures listed above
+	for (std::string textureName : textureFilenames)
 	{
-		PLOG_ERROR << "Failed to load PNG image!\n";
-		successfullyLoaded = false;
+		Texture tempTexture{};
+		if (!tempTexture.loadFromFile(("img/" + textureName), gameState))
+		{
+			PLOG_ERROR << "Failed to load texture image " << textureName << "!\n";
+			successfullyLoaded = false;
+		}
+		gameState.m_texturesList.insert({ textureName, tempTexture });
 	}
+
+	////Load PNG texture
+	//gameState.m_GroundTexture = loadTexture("img/ground.png", gameState);
+	//if (gameState.m_GroundTexture == NULL)
+	//{
+	//	PLOG_ERROR << "Failed to load PNG image!\n";
+	//	successfullyLoaded = false;
+	//}
 
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
@@ -101,33 +116,33 @@ bool loadMedia(GameState& gameState)
 //	SDL_Quit();
 //}
 
-SDL_Texture* loadTexture(std::string path, GameState& gameState)
-{
-	//The final texture
-	SDL_Texture* newTexture = NULL;
-
-	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (loadedSurface == NULL)
-	{
-		PLOG_ERROR << "Unable to load image " << path.c_str() << "! SDL_image Error: " << IMG_GetError() << '\n';
-	}
-	else
-	{
-		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(gameState.m_Renderer, loadedSurface);
-		if (newTexture == NULL)
-		{
-			PLOG_ERROR << "Unable to create texture from " << path.c_str() << "! SDL Error: " << SDL_GetError() << '\n';
-		}
-
-		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
-	}
-
-	return newTexture;
-
-}
+//SDL_Texture* loadTexture(std::string path, GameState& gameState)
+//{
+//	//The final texture
+//	SDL_Texture* newTexture = NULL;
+//
+//	//Load image at specified path
+//	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+//	if (loadedSurface == NULL)
+//	{
+//		PLOG_ERROR << "Unable to load image " << path.c_str() << "! SDL_image Error: " << IMG_GetError() << '\n';
+//	}
+//	else
+//	{
+//		//Create texture from surface pixels
+//		newTexture = SDL_CreateTextureFromSurface(gameState.m_Renderer, loadedSurface);
+//		if (newTexture == NULL)
+//		{
+//			PLOG_ERROR << "Unable to create texture from " << path.c_str() << "! SDL Error: " << SDL_GetError() << '\n';
+//		}
+//
+//		//Get rid of old loaded surface
+//		SDL_FreeSurface(loadedSurface);
+//	}
+//
+//	return newTexture;
+//
+//}
 
 bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState)
 {
@@ -157,10 +172,9 @@ int main(int argc, char* args[])
 	//Create pointers to objects representing the window, renderer and textures which will be passed to functions along the whole app's life
 	SDL_Window* window{ NULL };
 	SDL_Renderer* renderer{ NULL };
-	SDL_Texture* groundTexture{ NULL };
 
 	//Initialize the gameState object which holds pointers to various app components and constants (such as window size)
-	GameState gameState{ window, renderer, groundTexture };
+	GameState gameState{ window, renderer };
 
 	//Start up SDL and create window
 	if (!init(gameState))
@@ -195,7 +209,6 @@ int main(int argc, char* args[])
 					}
 				}
 
-
 				//Clear screen
 				SDL_SetRenderDrawColor(gameState.m_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gameState.m_Renderer);
@@ -204,12 +217,21 @@ int main(int argc, char* args[])
 				std::vector<SDL_Rect> groundViewportTiles{};
 				generateViewportTiles(groundViewportTiles, gameState);
 
-				//
+				Texture groundTexture{};
+				groundTexture.loadFromFile("img/ground.png", gameState);
+				Texture characterTexture{};
+				characterTexture.loadFromFile("img/character.png", gameState);
+
+
 				for (SDL_Rect viewport : groundViewportTiles)
 				{
-					SDL_RenderSetViewport(gameState.m_Renderer, &viewport);
-					SDL_RenderCopy(gameState.m_Renderer, gameState.m_GroundTexture, NULL, NULL);
+					//SDL_RenderSetViewport(gameState.m_Renderer, &viewport);
+					//gameState.m_texturesList.at("ground.png").render(viewport.x, viewport.y, gameState);
+					groundTexture.render(viewport.x, viewport.y, gameState);
+					//SDL_RenderCopy(gameState.m_Renderer, gameState.m_GroundTexture, NULL, NULL);
 				}
+
+				characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);

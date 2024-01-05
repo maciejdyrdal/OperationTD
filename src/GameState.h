@@ -1,8 +1,13 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include "Texture.h"
+
 #include <SDL.h>
 #include <SDL_image.h>
+
+#include <map>
+#include <string>
 
 class GameState
 {
@@ -20,10 +25,16 @@ public:
 	//The window renderer
 	SDL_Renderer* m_Renderer = NULL;
 
-	//Ground texture PNG
-	SDL_Texture* m_GroundTexture = NULL;
+	////Ground texture PNG
+	//Texture* m_GroundTexture;
 
-	GameState(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* groundTexture);
+	////Character texture PNG
+	//Texture* m_CharacterTexture;
+
+	//List of textures used in the game (name of the file, Texture object)
+	std::map<std::string, Texture> m_texturesList{};
+
+	GameState(SDL_Window* window, SDL_Renderer* renderer);
 
 	~GameState();
 };

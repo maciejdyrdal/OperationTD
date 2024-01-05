@@ -1,11 +1,11 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "GameState.h"
-
 #include <SDL.h>
 
 #include <string>
+
+class GameState;
 
 //Texture wrapper class
 class Texture

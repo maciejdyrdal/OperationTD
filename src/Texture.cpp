@@ -35,8 +35,8 @@ bool Texture::loadFromFile(std::string path, GameState& gameState)
     }
     else
     {
-        //Color key image
-        SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+        ////Color key image
+        //SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
         //Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(gameState.m_Renderer, loadedSurface);
         if (newTexture == NULL)

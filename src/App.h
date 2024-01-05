@@ -19,7 +19,7 @@ bool loadMedia(GameState& gameState);
 //void close();
 
 //Loads individual image
-SDL_Texture* loadTexture(std::string path, GameState& gameState);
+//SDL_Texture* loadTexture(std::string path, GameState& gameState);
 
 //Fill up a vector with the pixel coordinates of images which will act as game floor tiles
 bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState);
