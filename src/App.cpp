@@ -33,7 +33,7 @@ bool init(GameState& gameState)
 		}
 
 		//Create window
-		gameState.m_Window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH, gameState.m_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH, gameState.m_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gameState.m_Window == NULL)
 		{
 			PLOG_ERROR << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
