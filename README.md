@@ -11,4 +11,7 @@
 9. Restart Visual Studio
 10. Launch the app 
 
-
+## Visuals
+This is what the game currently looks like:
+![earlyGameScreenshot](https://github.com/maciejdyrdal/OperationTD/assets/64736385/e5495088-3c08-472c-a3e4-3f8b306c3fef)
+It doesn't look like much (you can't move, there are no enemies and the textures are primitive), but many foundations have been laid for further development.
