@@ -19,7 +19,7 @@ Texture::~Texture()
     free();
 }
 
-bool Texture::loadFromFile(std::string path, GameState& gameState)
+bool Texture::loadFromFile(const std::string& path, GameState& gameState)
 {
     //Get rid of preexisting texture
     free();

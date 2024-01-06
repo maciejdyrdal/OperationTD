@@ -18,7 +18,7 @@ public:
     ~Texture();
 
     //Loads image at specified path
-    bool loadFromFile(std::string path, GameState& gameState);
+    bool loadFromFile(const std::string& path, GameState& gameState);
 
     //Deallocates texture
     void free();

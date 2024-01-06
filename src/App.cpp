@@ -10,7 +10,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include <array>
 #include <iostream>
+#include <map>
 
 
 bool init(GameState& gameState)
@@ -67,24 +69,20 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState)
+bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
 
-	//Filenames of textures to be loaded
-	std::vector<std::string> textureFilenames{ "ground.png", "character.png" };
-
-	//Load all textures listed above
-	for (std::string textureName : textureFilenames)
+	if (!groundTexture.loadFromFile(gameState.m_textureFilenames[0], gameState))
 	{
-		Texture tempTexture{};
-		if (!tempTexture.loadFromFile(("img/" + textureName), gameState))
-		{
-			PLOG_ERROR << "Failed to load texture image " << textureName << "!\n";
-			successfullyLoaded = false;
-		}
-		gameState.m_texturesList.insert({ textureName, tempTexture });
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[0] << "!\n";
+		successfullyLoaded = false;
+	}
+	if (!characterTexture.loadFromFile(gameState.m_textureFilenames[1], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[1] << "!\n";
+		successfullyLoaded = false;
 	}
 
 	////Load PNG texture
@@ -183,8 +181,19 @@ int main(int argc, char* args[])
 	}
 	else
 	{
+		//Filenames of textures to be loaded
+		//constexpr std::array<std::string, 2> textureFilenames { "img/ground.png", "img/character.png" };
+		//std::array<Texture, textureFilenames.size()> texturesArray;
+
+		//const char* textureFilenames[] = { "img/ground.png", "img/character.png" };
+		//const int arraySize{ sizeof(textureFilenames) / sizeof(textureFilenames[0]) };
+		//Texture texturesArray[arraySize];
+
+		Texture groundTexture{};
+		Texture characterTexture{};
+
 		//Load media
-		if (!loadMedia(gameState))
+		if (!loadMedia(gameState, groundTexture, characterTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -217,21 +226,32 @@ int main(int argc, char* args[])
 				std::vector<SDL_Rect> groundViewportTiles{};
 				generateViewportTiles(groundViewportTiles, gameState);
 
-				Texture groundTexture{};
-				groundTexture.loadFromFile("img/ground.png", gameState);
-				Texture characterTexture{};
-				characterTexture.loadFromFile("img/character.png", gameState);
+				//std::string textureNames[] = { "img/ground.png", "img/character.png" };
+				//Texture textures[sizeof(textureNames) / sizeof(textureNames[0])];
+				//textures[0].loadFromFile(textureNames[0], gameState);
+				//textures[1].loadFromFile(textureNames[1], gameState);
 
+				//Texture groundTexture{};
+				//groundTexture.loadFromFile("img/ground.png", gameState);
+				//Texture characterTexture{};
+				//characterTexture.loadFromFile("img/character.png", gameState);
 
 				for (SDL_Rect viewport : groundViewportTiles)
 				{
 					//SDL_RenderSetViewport(gameState.m_Renderer, &viewport);
 					//gameState.m_texturesList.at("ground.png").render(viewport.x, viewport.y, gameState);
-					groundTexture.render(viewport.x, viewport.y, gameState);
+					//groundTexture.render(viewport.x, viewport.y, gameState);
 					//SDL_RenderCopy(gameState.m_Renderer, gameState.m_GroundTexture, NULL, NULL);
+
+					groundTexture.render(viewport.x, viewport.y, gameState);
+					//gameState.m_texturesArray[0].render(viewport.x, viewport.y, gameState);
+					//textures[0].render(viewport.x, viewport.y, gameState);
+
+					//texturesMap.at("ground.png").render(viewport.x, viewport.y, gameState);
 				}
 
 				characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
+				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
