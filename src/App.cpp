@@ -70,7 +70,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterTexture)
+bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -85,6 +85,12 @@ bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterT
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[1] << "!\n";
 		successfullyLoaded = false;
 	}
+	if (!towerTexture.loadFromFile(gameState.m_textureFilenames[2], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[2] << "!\n";
+		successfullyLoaded = false;
+	}
+
 
 	////Load PNG texture
 	//gameState.m_GroundTexture = loadTexture("img/ground.png", gameState);
@@ -184,13 +190,14 @@ int main(int argc, char* args[])
 	{
 		Texture groundTexture{};
 		Texture characterTexture{};
+		Texture towerTexture{};
 
 		Texture* characterTexturePtr{ &characterTexture };
 
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		//Load media
-		if (!loadMedia(gameState, groundTexture, characterTexture))
+		if (!loadMedia(gameState, groundTexture, characterTexture, towerTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -232,6 +239,9 @@ int main(int argc, char* args[])
 							break;
 						case SDLK_RIGHT:
 							player.xPos = std::min(player.xPos + gameState.m_TILE_SIDE_LENGTH, gameState.m_SCREEN_WIDTH - gameState.m_TILE_SIDE_LENGTH);
+							break;
+						case SDLK_SPACE:
+
 							break;
 						}
 					}

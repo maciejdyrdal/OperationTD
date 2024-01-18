@@ -23,6 +23,7 @@
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\Tower.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />

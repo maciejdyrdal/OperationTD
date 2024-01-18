@@ -35,7 +35,7 @@ public:
 	//List of textures used in the game (name of the file, Texture object)
 	//std::map<std::string, Texture> m_texturesList{};
 
-	const std::array<std::string, 2> m_textureFilenames{ "img/ground.png", "img/character.png" };
+	const std::array<std::string, 3> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png" };
 
 	GameState(SDL_Window* window, SDL_Renderer* renderer);
 
