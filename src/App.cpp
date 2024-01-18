@@ -263,8 +263,8 @@ int main(int argc, char* args[])
 							player.xPos = std::min(player.xPos + gameState.m_TILE_SIDE_LENGTH, gameState.m_SCREEN_WIDTH - gameState.m_TILE_SIDE_LENGTH);
 							break;
 						case SDLK_SPACE:
-							buildingTiles[player.xPos][player.yPos].tileTexture = &towerTexture;
-							buildingTiles[player.xPos][player.yPos].hasBuilding = true;
+							buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerTexture;
+							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
 							break;
 						}
 					}
@@ -292,7 +292,7 @@ int main(int argc, char* args[])
 					{
 						if (buildingTiles[x][y].hasBuilding)
 						{
-							buildingTiles[x][y].tileTexture->render(player.xPos, player.yPos, gameState);
+							buildingTiles[x][y].tileTexture->render(buildingTiles[x][y].xPos, buildingTiles[x][y].yPos, gameState);
 						}
 					}
 				}
