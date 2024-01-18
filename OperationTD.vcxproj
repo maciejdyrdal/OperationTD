@@ -23,7 +23,7 @@
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\Tower.h" />
+    <ClInclude Include="src\Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
@@ -31,6 +31,7 @@
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

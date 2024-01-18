@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "GameState.h"
 #include "Player.h"
+#include "Tile.h"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
@@ -149,7 +150,7 @@ bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterT
 //
 //}
 
-bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState)
+bool generateTiles(std::vector<Tile>& tiles, GameState& gameState)
 {
 	bool successfullyGenerated{ false };
 
@@ -157,7 +158,7 @@ bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameStat
 	{
 		for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
 		{
-			viewports.push_back({x * gameState.m_TILE_SIDE_LENGTH, y * gameState.m_TILE_SIDE_LENGTH, gameState.m_TILE_SIDE_LENGTH, gameState.m_TILE_SIDE_LENGTH});
+			tiles.push_back(Tile{x * gameState.m_TILE_SIDE_LENGTH, y * gameState.m_TILE_SIDE_LENGTH});
 		}
 	}
 
@@ -195,6 +196,9 @@ int main(int argc, char* args[])
 		Texture* characterTexturePtr{ &characterTexture };
 
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
+
+		std::vector<Tile> buildingTiles{};
+		generateTiles(buildingTiles, gameState);
 
 		//Load media
 		if (!loadMedia(gameState, groundTexture, characterTexture, towerTexture))
