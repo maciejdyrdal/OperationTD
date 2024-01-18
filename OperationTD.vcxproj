@@ -21,12 +21,14 @@
   <ItemGroup>
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\Logger.cpp" />
+    <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

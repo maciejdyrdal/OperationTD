@@ -2,6 +2,7 @@
 
 #include "Texture.h"
 #include "GameState.h"
+#include "Player.h"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
@@ -181,16 +182,12 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		//Filenames of textures to be loaded
-		//constexpr std::array<std::string, 2> textureFilenames { "img/ground.png", "img/character.png" };
-		//std::array<Texture, textureFilenames.size()> texturesArray;
-
-		//const char* textureFilenames[] = { "img/ground.png", "img/character.png" };
-		//const int arraySize{ sizeof(textureFilenames) / sizeof(textureFilenames[0]) };
-		//Texture texturesArray[arraySize];
-
 		Texture groundTexture{};
 		Texture characterTexture{};
+
+		Texture* characterTexturePtr{ &characterTexture };
+
+		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		//Load media
 		if (!loadMedia(gameState, groundTexture, characterTexture))
@@ -216,6 +213,28 @@ int main(int argc, char* args[])
 					{
 						quit = true;
 					}
+					else if (e.type == SDL_KEYDOWN)
+					{
+						int xPosTemp{ player.xPos };
+						int yPosTemp{ player.yPos };
+
+
+						switch (e.key.keysym.sym)
+						{
+						case SDLK_UP:
+							player.yPos = std::max(player.yPos - gameState.m_TILE_SIDE_LENGTH, 0);
+							break;
+						case SDLK_DOWN:
+							player.yPos = std::min(player.yPos + gameState.m_TILE_SIDE_LENGTH, gameState.m_SCREEN_HEIGHT - gameState.m_TILE_SIDE_LENGTH);
+							break;
+						case SDLK_LEFT:
+							player.xPos = std::max(player.xPos - gameState.m_TILE_SIDE_LENGTH, 0);
+							break;
+						case SDLK_RIGHT:
+							player.xPos = std::min(player.xPos + gameState.m_TILE_SIDE_LENGTH, gameState.m_SCREEN_WIDTH - gameState.m_TILE_SIDE_LENGTH);
+							break;
+						}
+					}
 				}
 
 				//Clear screen
@@ -226,41 +245,19 @@ int main(int argc, char* args[])
 				std::vector<SDL_Rect> groundViewportTiles{};
 				generateViewportTiles(groundViewportTiles, gameState);
 
-				//std::string textureNames[] = { "img/ground.png", "img/character.png" };
-				//Texture textures[sizeof(textureNames) / sizeof(textureNames[0])];
-				//textures[0].loadFromFile(textureNames[0], gameState);
-				//textures[1].loadFromFile(textureNames[1], gameState);
-
-				//Texture groundTexture{};
-				//groundTexture.loadFromFile("img/ground.png", gameState);
-				//Texture characterTexture{};
-				//characterTexture.loadFromFile("img/character.png", gameState);
-
 				for (SDL_Rect viewport : groundViewportTiles)
 				{
-					//SDL_RenderSetViewport(gameState.m_Renderer, &viewport);
-					//gameState.m_texturesList.at("ground.png").render(viewport.x, viewport.y, gameState);
-					//groundTexture.render(viewport.x, viewport.y, gameState);
-					//SDL_RenderCopy(gameState.m_Renderer, gameState.m_GroundTexture, NULL, NULL);
-
 					groundTexture.render(viewport.x, viewport.y, gameState);
-					//gameState.m_texturesArray[0].render(viewport.x, viewport.y, gameState);
-					//textures[0].render(viewport.x, viewport.y, gameState);
-
-					//texturesMap.at("ground.png").render(viewport.x, viewport.y, gameState);
 				}
 
-				characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
+				player.playerTexture->render(player.xPos, player.yPos, gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
 			}
 		}
 	}
-
-	//Free resources and close SDL
-	//close();
 
 	PLOG_INFO << "Exiting app...\n";
 
