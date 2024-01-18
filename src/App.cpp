@@ -150,7 +150,25 @@ bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterT
 //
 //}
 
-bool generateTiles(std::vector<Tile>& tiles, GameState& gameState)
+bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState)
+{
+	bool successfullyGenerated{ false };
+
+	for (int x{ 0 }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT; ++x)
+	{
+		std::vector<Tile> tempVector{};
+		for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
+		{
+			tempVector.push_back(Tile{x * gameState.m_TILE_SIDE_LENGTH, y * gameState.m_TILE_SIDE_LENGTH});
+		}
+		tiles.push_back(tempVector);
+	}
+
+	successfullyGenerated = true;
+	return successfullyGenerated;
+}
+
+bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState)
 {
 	bool successfullyGenerated{ false };
 
@@ -158,7 +176,7 @@ bool generateTiles(std::vector<Tile>& tiles, GameState& gameState)
 	{
 		for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
 		{
-			tiles.push_back(Tile{x * gameState.m_TILE_SIDE_LENGTH, y * gameState.m_TILE_SIDE_LENGTH});
+			viewports.push_back({ x * gameState.m_TILE_SIDE_LENGTH, y * gameState.m_TILE_SIDE_LENGTH, gameState.m_TILE_SIDE_LENGTH, gameState.m_TILE_SIDE_LENGTH });
 		}
 	}
 
@@ -197,7 +215,7 @@ int main(int argc, char* args[])
 
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
-		std::vector<Tile> buildingTiles{};
+		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
 
 		//Load media
@@ -245,7 +263,8 @@ int main(int argc, char* args[])
 							player.xPos = std::min(player.xPos + gameState.m_TILE_SIDE_LENGTH, gameState.m_SCREEN_WIDTH - gameState.m_TILE_SIDE_LENGTH);
 							break;
 						case SDLK_SPACE:
-
+							buildingTiles[player.xPos][player.yPos].tileTexture = &towerTexture;
+							buildingTiles[player.xPos][player.yPos].hasBuilding = true;
 							break;
 						}
 					}
@@ -266,6 +285,17 @@ int main(int argc, char* args[])
 
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
+
+				for (int x{ 0 }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT; ++x)
+				{
+					for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
+					{
+						if (buildingTiles[x][y].hasBuilding)
+						{
+							buildingTiles[x][y].tileTexture->render(player.xPos, player.yPos, gameState);
+						}
+					}
+				}
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);

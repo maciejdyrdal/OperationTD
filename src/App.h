@@ -2,6 +2,7 @@
 #define APP_H
 
 #include "GameState.h"
+#include "Tile.h"
 
 #include <SDL.h>
 
@@ -23,6 +24,8 @@ bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterT
 
 //Fill up a vector with the pixel coordinates of images which will act as game floor tiles
 bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState);
+
+bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState);
 
 #endif // !APP_H
 
