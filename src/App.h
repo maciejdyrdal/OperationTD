@@ -14,7 +14,7 @@
 bool init(GameState& gameState);
 
 //Loads media
-bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture);
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture);
 
 ////Frees media and shuts down SDL
 //void close();

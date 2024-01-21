@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include <array>
 #include <map>
@@ -26,14 +27,8 @@ public:
 	//The window renderer
 	SDL_Renderer* m_Renderer = NULL;
 
-	////Ground texture PNG
-	//Texture* m_GroundTexture;
-
-	////Character texture PNG
-	//Texture* m_CharacterTexture;
-
-	//List of textures used in the game (name of the file, Texture object)
-	//std::map<std::string, Texture> m_texturesList{};
+	//Globally used font
+	TTF_Font* m_Font = NULL;
 
 	const std::array<std::string, 3> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png" };
 

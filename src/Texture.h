@@ -20,11 +20,14 @@ public:
     //Loads image at specified path
     bool loadFromFile(const std::string& path, GameState& gameState);
 
+    //Creates image from font string
+    bool loadFromRenderedText(std::string textureText, SDL_Color textColor, GameState& gameState);
+
     //Deallocates texture
     void free();
 
     //Renders texture at given point
-    void render(int x, int y, GameState& gameState);
+    void render(int x, int y, GameState& gameState, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
     //Gets image dimensions
     int getWidth();

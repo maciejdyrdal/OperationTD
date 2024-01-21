@@ -38,7 +38,7 @@ bool init(GameState& gameState)
 		}
 
 		//Create window
-		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH, gameState.m_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH, gameState.m_SCREEN_HEIGHT + 50, SDL_WINDOW_SHOWN);
 		if (gameState.m_Window == NULL)
 		{
 			PLOG_ERROR << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
@@ -65,6 +65,13 @@ bool init(GameState& gameState)
 					PLOG_ERROR << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << '\n';
 					successfullyInitialized = false;
 				}
+
+				//Initialize SDL_ttf
+				if (TTF_Init() == -1)
+				{
+					PLOG_ERROR << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << '\n';
+					successfullyInitialized = false;
+				}
 			}
 		}
 	}
@@ -72,7 +79,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -93,14 +100,22 @@ bool loadMedia(GameState& gameState, Texture& groundTexture, Texture& characterT
 		successfullyLoaded = false;
 	}
 
-
-	////Load PNG texture
-	//gameState.m_GroundTexture = loadTexture("img/ground.png", gameState);
-	//if (gameState.m_GroundTexture == NULL)
-	//{
-	//	PLOG_ERROR << "Failed to load PNG image!\n";
-	//	successfullyLoaded = false;
-	//}
+	gameState.m_Font = TTF_OpenFont("fonts/Roboto-Black.ttf", 28);
+	if (gameState.m_Font == NULL)
+	{
+		PLOG_ERROR << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << '\n';
+		successfullyLoaded = false;
+	}
+	else
+	{
+		//Render text
+		SDL_Color textColor = { 0, 0, 0 };
+		if (!textTexture.loadFromRenderedText("The quick brown fox jumps over the lazy dog", textColor, gameState))
+		{
+			PLOG_ERROR << "Failed to render text texture!\n";
+			successfullyLoaded = false;
+		}
+	}
 
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
@@ -212,6 +227,8 @@ int main(int argc, char* args[])
 		Texture characterTexture{};
 		Texture towerTexture{};
 
+		Texture textTexture{};
+
 		Texture* characterTexturePtr{ &characterTexture };
 
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
@@ -220,7 +237,7 @@ int main(int argc, char* args[])
 		generateTiles(buildingTiles, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, groundTexture, characterTexture, towerTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -297,6 +314,9 @@ int main(int argc, char* args[])
 						}
 					}
 				}
+
+				//Render current frame
+				textTexture.render((gameState.m_SCREEN_WIDTH - textTexture.getWidth()) / 2, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
