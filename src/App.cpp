@@ -15,7 +15,7 @@
 
 #include <array>
 #include <iostream>
-#include <map>
+#include <sstream>
 
 
 bool init(GameState& gameState)
@@ -228,6 +228,7 @@ int main(int argc, char* args[])
 		Texture towerTexture{};
 
 		Texture textTexture{};
+		Texture timeTextTexture{};
 
 		Texture* characterTexturePtr{ &characterTexture };
 
@@ -248,6 +249,9 @@ int main(int argc, char* args[])
 
 			//Event handler
 			SDL_Event e;
+
+			//Set text color as black
+			SDL_Color textColor = { 0, 0, 0, 255 };
 
 			//While application is running
 			while (!quit)
@@ -288,6 +292,16 @@ int main(int argc, char* args[])
 					}
 				}
 
+				//Set text to be rendered
+				gameState.m_TimeText.str("");
+				gameState.m_TimeText << "Milliseconds since start time: " << SDL_GetTicks();
+
+				//Render text
+				if (!timeTextTexture.loadFromRenderedText(gameState.m_TimeText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
 				//Clear screen
 				SDL_SetRenderDrawColor(gameState.m_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gameState.m_Renderer);
@@ -316,7 +330,7 @@ int main(int argc, char* args[])
 				}
 
 				//Render current frame
-				textTexture.render((gameState.m_SCREEN_WIDTH - textTexture.getWidth()) / 2, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
+				timeTextTexture.render((gameState.m_SCREEN_WIDTH - textTexture.getWidth()) / 2, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);

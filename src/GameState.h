@@ -10,6 +10,7 @@
 #include <array>
 #include <map>
 #include <string>
+#include <sstream>
 
 class GameState
 {
@@ -29,6 +30,12 @@ public:
 
 	//Globally used font
 	TTF_Font* m_Font = NULL;
+
+	//Current time start time
+	int m_StartTime = 0;
+
+	//In memory text stream
+	std::stringstream m_TimeText;
 
 	const std::array<std::string, 3> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png" };
 
