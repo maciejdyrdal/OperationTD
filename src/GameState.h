@@ -3,6 +3,8 @@
 
 #include "Texture.h"
 
+#include "Timer.h"
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -31,8 +33,10 @@ public:
 	//Globally used font
 	TTF_Font* m_Font = NULL;
 
-	//Current time start time
-	int m_StartTime = 0;
+	int m_FontSize = 18;
+
+	//The application timer
+	Timer m_Timer;
 
 	//In memory text stream
 	std::stringstream m_TimeText;

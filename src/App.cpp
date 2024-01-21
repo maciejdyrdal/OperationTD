@@ -47,7 +47,7 @@ bool init(GameState& gameState)
 		else
 		{
 			//Create renderer for window
-			gameState.m_Renderer = SDL_CreateRenderer(gameState.m_Window, -1, SDL_RENDERER_ACCELERATED);
+			gameState.m_Renderer = SDL_CreateRenderer(gameState.m_Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 			if (gameState.m_Renderer == NULL)
 			{
 				PLOG_ERROR << "Renderer could not be created! SDL Error: " << SDL_GetError() << '\n';
@@ -100,7 +100,7 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	gameState.m_Font = TTF_OpenFont("fonts/Roboto-Black.ttf", 28);
+	gameState.m_Font = TTF_OpenFont("fonts/Roboto-Black.ttf", gameState.m_FontSize);
 	if (gameState.m_Font == NULL)
 	{
 		PLOG_ERROR << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << '\n';
@@ -289,12 +289,37 @@ int main(int argc, char* args[])
 							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
 							break;
 						}
+
+						//Start/stop
+						if (e.key.keysym.sym == SDLK_s)
+						{
+							if (gameState.m_Timer.isStarted())
+							{
+								gameState.m_Timer.stop();
+							}
+							else
+							{
+								gameState.m_Timer.start();
+							}
+						}
+						//Pause/unpause
+						else if (e.key.keysym.sym == SDLK_p)
+						{
+							if (gameState.m_Timer.isPaused())
+							{
+								gameState.m_Timer.unpause();
+							}
+							else
+							{
+								gameState.m_Timer.pause();
+							}
+						}
 					}
 				}
 
 				//Set text to be rendered
 				gameState.m_TimeText.str("");
-				gameState.m_TimeText << "Milliseconds since start time: " << SDL_GetTicks();
+				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
 
 				//Render text
 				if (!timeTextTexture.loadFromRenderedText(gameState.m_TimeText.str().c_str(), textColor, gameState))
@@ -329,8 +354,8 @@ int main(int argc, char* args[])
 					}
 				}
 
-				//Render current frame
-				timeTextTexture.render((gameState.m_SCREEN_WIDTH - textTexture.getWidth()) / 2, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
+				//Render timer
+				timeTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);

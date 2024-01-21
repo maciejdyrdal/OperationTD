@@ -1,7 +1,10 @@
 #include "GameState.h"
 
 GameState::GameState(SDL_Window* window, SDL_Renderer* renderer)
-	:m_Window{window}, m_Renderer{renderer} {}
+	:m_Window{window}, m_Renderer{renderer} 
+{
+	
+}
 
 GameState::~GameState()
 {

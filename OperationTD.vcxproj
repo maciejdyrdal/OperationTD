@@ -24,6 +24,7 @@
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Tile.h" />
+    <ClInclude Include="src\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Tile.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
