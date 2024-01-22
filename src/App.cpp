@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Player.h"
 #include "Tile.h"
+#include "Enemy.h"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
@@ -38,7 +39,7 @@ bool init(GameState& gameState)
 		}
 
 		//Create window
-		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH, gameState.m_SCREEN_HEIGHT + 50, SDL_WINDOW_SHOWN);
+		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH + 50, gameState.m_SCREEN_HEIGHT + 50, SDL_WINDOW_SHOWN);
 		if (gameState.m_Window == NULL)
 		{
 			PLOG_ERROR << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
@@ -79,7 +80,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& enemyTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -99,6 +100,11 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[2] << "!\n";
 		successfullyLoaded = false;
 	}
+	if (!enemyTexture.loadFromFile(gameState.m_textureFilenames[3], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[3] << "!\n";
+		successfullyLoaded = false;
+	}
 
 	gameState.m_Font = TTF_OpenFont("fonts/Roboto-Black.ttf", gameState.m_FontSize);
 	if (gameState.m_Font == NULL)
@@ -106,65 +112,10 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		PLOG_ERROR << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << '\n';
 		successfullyLoaded = false;
 	}
-	else
-	{
-		//Render text
-		SDL_Color textColor = { 0, 0, 0 };
-		if (!textTexture.loadFromRenderedText("The quick brown fox jumps over the lazy dog", textColor, gameState))
-		{
-			PLOG_ERROR << "Failed to render text texture!\n";
-			successfullyLoaded = false;
-		}
-	}
 
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
 }
-
-//void close()
-//{
-//	//Free loaded image
-//	SDL_DestroyTexture(g_GroundTexture);
-//	g_GroundTexture = NULL;
-//
-//	//Destroy window
-//	SDL_DestroyRenderer(g_Renderer);
-//	SDL_DestroyWindow(g_Window);
-//	g_Window = NULL;
-//	g_Renderer = NULL;
-//
-//	//Quit SDL subsystems
-//	IMG_Quit();
-//	SDL_Quit();
-//}
-
-//SDL_Texture* loadTexture(std::string path, GameState& gameState)
-//{
-//	//The final texture
-//	SDL_Texture* newTexture = NULL;
-//
-//	//Load image at specified path
-//	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-//	if (loadedSurface == NULL)
-//	{
-//		PLOG_ERROR << "Unable to load image " << path.c_str() << "! SDL_image Error: " << IMG_GetError() << '\n';
-//	}
-//	else
-//	{
-//		//Create texture from surface pixels
-//		newTexture = SDL_CreateTextureFromSurface(gameState.m_Renderer, loadedSurface);
-//		if (newTexture == NULL)
-//		{
-//			PLOG_ERROR << "Unable to create texture from " << path.c_str() << "! SDL Error: " << SDL_GetError() << '\n';
-//		}
-//
-//		//Get rid of old loaded surface
-//		SDL_FreeSurface(loadedSurface);
-//	}
-//
-//	return newTexture;
-//
-//}
 
 bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState)
 {
@@ -226,19 +177,27 @@ int main(int argc, char* args[])
 		Texture groundTexture{};
 		Texture characterTexture{};
 		Texture towerTexture{};
+		Texture enemyTexture{};
+
+		Texture* characterTexturePtr{ &characterTexture };
+		Texture* enemyTexturePtr{ &enemyTexture };
+
+		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
+		std::vector<Enemy> enemies;
+		for (int i{ 0 }; i < gameState.enemyCount; ++i)
+		{
+			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), ((gameState.m_SCREEN_HEIGHT_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), 20));
+		}
+		//Enemy enemy{ enemyTexturePtr, gameState.m_TILE_SIDE_LENGTH * 4, gameState.m_TILE_SIDE_LENGTH * 5, 20 };
 
 		Texture textTexture{};
 		Texture timeTextTexture{};
-
-		Texture* characterTexturePtr{ &characterTexture };
-
-		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, enemyTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -252,6 +211,8 @@ int main(int argc, char* args[])
 
 			//Set text color as black
 			SDL_Color textColor = { 0, 0, 0, 255 };
+
+			gameState.m_Timer.start();
 
 			//While application is running
 			while (!quit)
@@ -340,7 +301,6 @@ int main(int argc, char* args[])
 					groundTexture.render(viewport.x, viewport.y, gameState);
 				}
 
-				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
 
 				for (int x{ 0 }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT; ++x)
@@ -353,6 +313,36 @@ int main(int argc, char* args[])
 						}
 					}
 				}
+
+				for (int i{ 0 }; i < gameState.enemyCount; ++i)
+				{
+					if (i + 1 <= gameState.m_Timer.getTicks() / 1000.0f <= i + 2)
+					{
+						//enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
+					}
+					//if (i + 2 <= gameState.m_Timer.getTicks() / 1000.0f <= i + 3)
+					//{
+					//	std::cout << "aaa" << '\n';
+					//	enemies[i].move(enemies[i].xPos - gameState.m_TILE_SIDE_LENGTH, enemies[i].yPos, gameState);
+					//	enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
+
+					//}
+				}
+
+				enemies[0].move(enemies[0].xPos - 1, enemies[0].yPos, gameState);
+				enemies[0].enemyTexture->render(enemies[0].xPos, enemies[0].yPos, gameState);
+
+				//enemy.enemyTexture->render(enemy.xPos, enemy.yPos, gameState);
+
+				//for (int i{ 0 }; i < gameState.enemyCount; ++i)
+				//{
+				//	if (i + 1 <= gameState.m_Timer.getTicks() / 1000.0f <= i + 2)
+				//	{
+				//		enemy.enemyTexture->render(enemy.xPos, enemy.yPos, gameState);
+				//		enemy.move(enemy.xPos - gameState.m_TILE_SIDE_LENGTH, enemy.yPos, gameState);
+				//	}
+				//}
+
 
 				//Render timer
 				timeTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);

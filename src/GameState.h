@@ -41,7 +41,9 @@ public:
 	//In memory text stream
 	std::stringstream m_TimeText;
 
-	const std::array<std::string, 3> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png" };
+	int enemyCount{ 5 };
+
+	const std::array<std::string, 4> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/enemy.png" };
 
 	GameState(SDL_Window* window, SDL_Renderer* renderer);
 

@@ -14,7 +14,7 @@
 bool init(GameState& gameState);
 
 //Loads media
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture);
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& enemyTexture);
 
 ////Frees media and shuts down SDL
 //void close();
@@ -28,4 +28,3 @@ bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameStat
 bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState);
 
 #endif // !APP_H
-
