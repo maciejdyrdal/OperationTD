@@ -48,7 +48,7 @@ public:
 	//In memory text stream
 	std::stringstream m_TimeText;
 
-	const std::array<std::string, 6> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png" };
+	const std::array<std::string, 15> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png"};
 	int enemyCount{ 5 };
 
 

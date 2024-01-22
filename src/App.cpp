@@ -81,7 +81,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -124,6 +124,61 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[5] << "!\n";
 		successfullyLoaded = false;
 	}
+
+	if (!gem_icon.loadFromFile(gameState.m_textureFilenames[6], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[6] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!iron_icon.loadFromFile(gameState.m_textureFilenames[7], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[7] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!stone_icon.loadFromFile(gameState.m_textureFilenames[8], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[8] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!goblin.loadFromFile(gameState.m_textureFilenames[9], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[9] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!knight.loadFromFile(gameState.m_textureFilenames[10], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[10] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!smallGoblin.loadFromFile(gameState.m_textureFilenames[11], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[11] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!towerBaseArrow.loadFromFile(gameState.m_textureFilenames[12], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[12] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!towerBaseLava.loadFromFile(gameState.m_textureFilenames[13], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[13] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!towerBaseMagic.loadFromFile(gameState.m_textureFilenames[14], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[14] << "!\n";
+		successfullyLoaded = false;
+	}
+
 
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
@@ -237,6 +292,19 @@ int main(int argc, char* args[])
 		Texture panelSelection{};
 		Texture selectionTile{};
 
+		Texture gem_icon{};
+		Texture iron_icon{};
+		Texture stone_icon{};
+
+		Texture goblin{};
+		Texture knight{};
+		Texture smallGoblin{};
+
+		Texture towerBaseArrow{};
+		Texture towerBaseLava{};
+		Texture towerBaseMagic{};
+
+
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
@@ -254,7 +322,7 @@ int main(int argc, char* args[])
 		generateTiles(buildingTiles, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
