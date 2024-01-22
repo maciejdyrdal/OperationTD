@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Player.h"
 #include "Tile.h"
+#include "SelectionTile.h"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
@@ -38,7 +39,7 @@ bool init(GameState& gameState)
 		}
 
 		//Create window
-		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH, gameState.m_SCREEN_HEIGHT + 50, SDL_WINDOW_SHOWN);
+		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH + gameState.s_SCREEN_PANEL_WIDTH, gameState.m_SCREEN_HEIGHT + 50, SDL_WINDOW_SHOWN);
 		if (gameState.m_Window == NULL)
 		{
 			PLOG_ERROR << "Window could not be created! SDL_Error: " << SDL_GetError() << '\n';
@@ -79,7 +80,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -97,6 +98,18 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 	if (!towerTexture.loadFromFile(gameState.m_textureFilenames[2], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[2] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!panelSelection.loadFromFile(gameState.m_textureFilenames[3], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[3] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!selectionTile.loadFromFile(gameState.m_textureFilenames[4], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[4] << "!\n";
 		successfullyLoaded = false;
 	}
 
@@ -200,6 +213,44 @@ bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameStat
 	return successfullyGenerated;
 }
 
+//Selection tiles generating
+
+bool generateSelectionTiles(std::vector<std::vector<SelectionTile>>& Selectiontiles, GameState& gameState)
+{
+	bool successfullyGenerated{ false };
+
+	for (int x{ gameState.m_SCREEN_WIDTH_TILE_COUNT }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_SCREEN_WIDTH_PANEL_COUNT; ++x)
+	{
+		std::vector<SelectionTile> tempVector{};
+		for (int y{ 0 }; y < gameState.s_SCREEN_HEIGHT_PANEL_COUNT; ++y)
+		{
+			tempVector.push_back(SelectionTile{ x * gameState.s_PANEL_TILE_SIDE_LENGTH, y * gameState.s_PANEL_TILE_SIDE_LENGTH });
+		}
+		Selectiontiles.push_back(tempVector);
+	}
+
+	successfullyGenerated = true;
+	return successfullyGenerated;
+}
+
+bool generateSelectionViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState)
+{
+	bool successfullyGenerated{ false };
+
+	for (int x{ gameState.m_SCREEN_WIDTH_TILE_COUNT }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_SCREEN_WIDTH_PANEL_COUNT; ++x)
+	{
+		for (int y{ 0 }; y < gameState.s_SCREEN_HEIGHT_PANEL_COUNT; ++y)
+		{
+			viewports.push_back({ x * gameState.s_PANEL_TILE_SIDE_LENGTH, y * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH });
+		}
+	}
+
+	successfullyGenerated = true;
+	return successfullyGenerated;
+}
+
+
+
 
 int main(int argc, char* args[])
 {
@@ -232,13 +283,20 @@ int main(int argc, char* args[])
 
 		Texture* characterTexturePtr{ &characterTexture };
 
+
+		/////////////////////
+		Texture panelSelection{};
+		Texture selectionTile{};
+
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
+
+		Player select{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -339,6 +397,16 @@ int main(int argc, char* args[])
 				{
 					groundTexture.render(viewport.x, viewport.y, gameState);
 				}
+
+				//Create Selection viewport grid
+				std::vector<SDL_Rect> selectionGroundViewportTiles{};
+				generateSelectionViewportTiles(selectionGroundViewportTiles, gameState);
+
+				for (SDL_Rect viewport : selectionGroundViewportTiles)
+				{
+					selectionTile.render(viewport.x, viewport.y, gameState);
+				}
+
 
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);

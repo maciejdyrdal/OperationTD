@@ -22,6 +22,7 @@
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\SelectionTile.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\Timer.h" />
@@ -31,6 +32,7 @@
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\SelectionTile.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Timer.cpp" />

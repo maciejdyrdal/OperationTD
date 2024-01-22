@@ -19,10 +19,17 @@ class GameState
 public:
 	//Screen dimension constants
 	const int m_TILE_SIDE_LENGTH = 64;
-	const int m_SCREEN_WIDTH_TILE_COUNT = 9;
+	const int m_SCREEN_WIDTH_TILE_COUNT = 15;
 	const int m_SCREEN_WIDTH = m_TILE_SIDE_LENGTH * m_SCREEN_WIDTH_TILE_COUNT;
-	const int m_SCREEN_HEIGHT_TILE_COUNT = 7;
+	const int m_SCREEN_HEIGHT_TILE_COUNT = 10;
 	const int m_SCREEN_HEIGHT = m_TILE_SIDE_LENGTH * m_SCREEN_HEIGHT_TILE_COUNT;
+
+
+	const int s_PANEL_TILE_SIDE_LENGTH = 64;
+	const int s_SCREEN_WIDTH_PANEL_COUNT = 2;
+	const int s_SCREEN_PANEL_WIDTH = s_PANEL_TILE_SIDE_LENGTH * s_SCREEN_WIDTH_PANEL_COUNT;
+	const int s_SCREEN_HEIGHT_PANEL_COUNT = 5;
+	const int s_SCREEN_PANEL_HEIGHT = s_PANEL_TILE_SIDE_LENGTH * s_SCREEN_HEIGHT_PANEL_COUNT;
 
 	//The window we'll be rendering to
 	SDL_Window* m_Window = NULL;
@@ -41,7 +48,7 @@ public:
 	//In memory text stream
 	std::stringstream m_TimeText;
 
-	const std::array<std::string, 3> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png" };
+	const std::array<std::string, 5> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png"};
 
 	GameState(SDL_Window* window, SDL_Renderer* renderer);
 
