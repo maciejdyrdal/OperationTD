@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Tile.h"
+#include "SelectionTile.h"
 
 #include <SDL.h>
 
@@ -14,7 +15,7 @@
 bool init(GameState& gameState);
 
 //Loads media
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& enemyTexture);
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture);
 
 ////Frees media and shuts down SDL
 //void close();
