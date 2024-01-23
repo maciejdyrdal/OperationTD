@@ -6,6 +6,7 @@
 #include "Tile.h"
 #include "SelectionTile.h"
 #include "Enemy.h"
+#include "Tower.h"
 
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
@@ -345,6 +346,7 @@ int main(int argc, char* args[])
 		Texture* characterTexturePtr{ &characterTexture };
 		Texture* enemyTexturePtr{ &enemyTexture };
 		Texture* panelSelectionPtr{ &panelSelection };
+		Texture* towerBaseArrowPtr{ &towerBaseArrow };
 
 		// Create the player and enemy objects
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
@@ -353,6 +355,10 @@ int main(int argc, char* args[])
 		{
 			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), ((gameState.m_SCREEN_HEIGHT_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), 20, 2 * i + 2));
 		}
+
+		// Create the vector containing placed towers
+		std::vector<Tower> towers;
+		Tower tempTower(towerBaseArrowPtr, 0, 0);
 
 		//Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
 		Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
@@ -416,7 +422,13 @@ int main(int argc, char* args[])
 							break;
 
 						case SDLK_SPACE:
-							buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerTexture;
+							//buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerTexture;
+
+							tempTower.xPos = player.xPos;
+							tempTower.yPos = player.yPos;
+
+							towers.push_back(tempTower);
+
 							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
 							break;
 
@@ -561,32 +573,37 @@ int main(int argc, char* args[])
 					stoneRoad.render((std::get<0>(pos) * gameState.m_TILE_SIDE_LENGTH), (std::get<1>(pos) * gameState.m_TILE_SIDE_LENGTH), gameState);
 				}
 
+				// Render placed towers and deal damage with them
+				for (Tower tower : towers)
+				{
+					tower.towerTexture->render(tower.xPos, tower.yPos, gameState);
+
+					for (Enemy enemy : enemies)
+					{
+						//tower.dealDamage(enemy);
+						enemy.takeDamage(tower.dps);
+						std::cout << "Enemy's health is " << enemy.getHp() << '\n';
+						std::cout << enemy.isDead << '\n';
+					}
+				}
+
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
 
 				//selection render
 				select.playerTexture->render(select.xPos, select.yPos, gameState);
 
-				for (int x{ 0 }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT; ++x)
-				{
-					for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
-					{
-						if (buildingTiles[x][y].hasBuilding)
-						{
-							buildingTiles[x][y].tileTexture->render(buildingTiles[x][y].xPos, buildingTiles[x][y].yPos, gameState);
-						}
-					}
-				}
 
-				//for (int i{ 0 }; i < gameState.enemyCount; ++i)
+				// Render placed tower textures (deprecated)
+				//for (int x{ 0 }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT; ++x)
 				//{
-				//	if (i * 2 + 1 <= gameState.m_Timer.getTicks() / 1000.f && gameState.m_Timer.getTicks() / 1000.f <= i * 2 + 3 && enemies[i].moveCount == i)
+				//	for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
 				//	{
-				//		enemies[i].move(std::get<0>(gameState.enemyPath[i]) * 64, std::get<1>(gameState.enemyPath[i]) * 64, gameState);
-				//		++enemies[i].moveCount;
-				//		std::cout << enemies[i].xPos << ' ' << enemies[i].yPos << ' ' << enemies[i].moveCount << '\n';
+				//		if (buildingTiles[x][y].hasBuilding)
+				//		{
+				//			buildingTiles[x][y].tileTexture->render(buildingTiles[x][y].xPos, buildingTiles[x][y].yPos, gameState);
+				//		}
 				//	}
-				//	enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
 				//}
 
 				// Move each enemy to the next tile every few seconds

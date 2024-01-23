@@ -12,6 +12,7 @@ int Enemy::takeDamage(int damage)
 	if (damage >= hp)
 	{
 		hp = 0;
+		isDead = true;
 	}
 	else
 	{
