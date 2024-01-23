@@ -18,6 +18,7 @@
 #include <array>
 #include <iostream>
 #include <sstream>
+#include <tuple>
 
 
 bool init(GameState& gameState)
@@ -297,18 +298,14 @@ int main(int argc, char* args[])
 	}
 	else
 	{
+		// Initialize the texture objects
 		Texture groundTexture{};
 		Texture characterTexture{};
 		Texture towerTexture{};
 		Texture enemyTexture{};
 
-		Texture* characterTexturePtr{ &characterTexture };
-		Texture* enemyTexturePtr{ &enemyTexture };
-
-
-		/////////////////////
 		Texture panelSelection{};
-		Texture* panelSelectionPtr{ &panelSelection };
+
 		Texture selectionTile{};
 		Texture protagonist{};
 
@@ -316,7 +313,6 @@ int main(int argc, char* args[])
 		Texture iron_icon{};
 		Texture stone_icon{};
 		Texture stoneRoad{};
-
 
 		Texture goblin{};
 		Texture knight{};
@@ -328,25 +324,27 @@ int main(int argc, char* args[])
 
 		Texture towersText{};
 
+		Texture textTexture{};
+		Texture timeTextTexture{};
 
+		// Initialize the texture pointers for the player character and enemies
+		Texture* characterTexturePtr{ &characterTexture };
+		Texture* enemyTexturePtr{ &enemyTexture };
+		Texture* panelSelectionPtr{ &panelSelection };
+
+		// Create the player and enemy objects
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
-			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), ((gameState.m_SCREEN_HEIGHT_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), 20));
+			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), ((gameState.m_SCREEN_HEIGHT_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), 20, 2 * i + 2));
 		}
-		//Enemy enemy{ enemyTexturePtr, gameState.m_TILE_SIDE_LENGTH * 4, gameState.m_TILE_SIDE_LENGTH * 5, 20 };
-
-		Texture textTexture{};
-		Texture timeTextTexture{};
 
 		//Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
 		Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
 
-
 		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
-
 
 		//selection vector
 		std::vector<std::vector<SelectionTile>> selections{};
@@ -429,7 +427,7 @@ int main(int argc, char* args[])
 
 
 						//Start/stop
-						if (e.key.keysym.sym == SDLK_s)
+						if (e.key.keysym.sym == SDLK_o)
 						{
 							if (gameState.m_Timer.isStarted())
 							{
@@ -494,7 +492,11 @@ int main(int argc, char* args[])
 				towerBaseLava.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 				towerBaseMagic.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 2 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 
-
+				// Render path for enemies
+				for (std::tuple<int, int> pos : gameState.enemyPath)
+				{
+					stoneRoad.render((std::get<0>(pos) * gameState.m_TILE_SIDE_LENGTH), (std::get<1>(pos) * gameState.m_TILE_SIDE_LENGTH), gameState);
+				}
 
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
@@ -513,35 +515,31 @@ int main(int argc, char* args[])
 					}
 				}
 
-				for (int i{ 0 }; i < gameState.enemyCount; ++i)
-				{
-					if (i + 1 <= gameState.m_Timer.getTicks() / 1000.0f <= i + 2)
-					{
-						//enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
-					}
-					//if (i + 2 <= gameState.m_Timer.getTicks() / 1000.0f <= i + 3)
-					//{
-					//	std::cout << "aaa" << '\n';
-					//	enemies[i].move(enemies[i].xPos - gameState.m_TILE_SIDE_LENGTH, enemies[i].yPos, gameState);
-					//	enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
-
-					//}
-				}
-
-				enemies[0].move(enemies[0].xPos - 1, enemies[0].yPos, gameState);
-				enemies[0].enemyTexture->render(enemies[0].xPos, enemies[0].yPos, gameState);
-
-				//enemy.enemyTexture->render(enemy.xPos, enemy.yPos, gameState);
-
 				//for (int i{ 0 }; i < gameState.enemyCount; ++i)
 				//{
-				//	if (i + 1 <= gameState.m_Timer.getTicks() / 1000.0f <= i + 2)
+				//	if (i * 2 + 1 <= gameState.m_Timer.getTicks() / 1000.f && gameState.m_Timer.getTicks() / 1000.f <= i * 2 + 3 && enemies[i].moveCount == i)
 				//	{
-				//		enemy.enemyTexture->render(enemy.xPos, enemy.yPos, gameState);
-				//		enemy.move(enemy.xPos - gameState.m_TILE_SIDE_LENGTH, enemy.yPos, gameState);
+				//		enemies[i].move(std::get<0>(gameState.enemyPath[i]) * 64, std::get<1>(gameState.enemyPath[i]) * 64, gameState);
+				//		++enemies[i].moveCount;
+				//		std::cout << enemies[i].xPos << ' ' << enemies[i].yPos << ' ' << enemies[i].moveCount << '\n';
 				//	}
+				//	enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
 				//}
 
+				// Move each enemy to the next tile every few seconds
+				for (int i{ 0 }; i < gameState.enemyCount; ++i)
+				{
+					for (int j{ 0 }; j < gameState.enemyPath.size(); ++j)
+					{
+						if (enemies[i].timeToMove <= gameState.m_Timer.getTicks() / 1000.f && gameState.m_Timer.getTicks() / 1000.f <= enemies[i].timeToMove + 1 && enemies[i].moveCount == j)
+						{
+							enemies[i].move(std::get<0>(gameState.enemyPath[j]) * 64, std::get<1>(gameState.enemyPath[j]) * 64, gameState);
+							++enemies[i].moveCount;
+							enemies[i].timeToMove += 2;
+						}
+					}
+					enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
+				}
 
 				//Render timer
 				timeTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);

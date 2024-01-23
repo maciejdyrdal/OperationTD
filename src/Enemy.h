@@ -13,7 +13,7 @@ public:
 	int xPos;
 	int yPos;
 
-	Enemy(Texture* playerTexture, int xPos, int yPos, int hp);
+	Enemy(Texture* playerTexture, int xPos, int yPos, int hp, int timeToMove);
 
 	~Enemy();
 
@@ -23,6 +23,10 @@ public:
 	int getHp();
 
 	bool move(int x, int y, GameState& gameState);
+
+	int moveCount{ 0 };
+
+	int timeToMove;
 
 private:
 	int hp;

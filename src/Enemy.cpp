@@ -2,8 +2,8 @@
 
 #include "GameState.h"
 
-Enemy::Enemy(Texture* enemyTexture, int xPos, int yPos, int hp)
-	: enemyTexture{enemyTexture}, xPos{xPos}, yPos{yPos}, hp{hp} {}
+Enemy::Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove)
+	: enemyTexture{ enemyTexture }, xPos{ xPos }, yPos{ yPos }, hp{ hp }, timeToMove{ timeToMove } {}
 
 Enemy::~Enemy() {}
 
@@ -30,7 +30,7 @@ bool Enemy::move(int x, int y, GameState& gameState)
 {
 	bool movedSuccessfully{ false };
 
-	if (0 <= x / 64 <= gameState.m_SCREEN_WIDTH_TILE_COUNT && 0 <= y / 64 <= gameState.m_SCREEN_HEIGHT_TILE_COUNT)
+	if (0 <= x / 64 && x / 64 <= gameState.m_SCREEN_WIDTH_TILE_COUNT && 0 <= y / 64 && y / 64 <= gameState.m_SCREEN_HEIGHT_TILE_COUNT)
 	{
 		xPos = x;
 		yPos = y;
