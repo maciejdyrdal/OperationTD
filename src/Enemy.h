@@ -13,7 +13,7 @@ public:
 	int xPos;
 	int yPos;
 
-	Enemy(Texture* playerTexture, int xPos, int yPos, int hp, int timeToMove);
+	Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove);
 
 	~Enemy();
 
@@ -28,6 +28,7 @@ public:
 
 	int timeToMove;
 
+	bool isDead{ false };
 private:
 	int hp;
 
