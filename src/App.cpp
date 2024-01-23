@@ -81,7 +81,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -188,6 +188,12 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 	if (!protagonist.loadFromFile(gameState.m_textureFilenames[16], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[16] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!towersText.loadFromFile(gameState.m_textureFilenames[17], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[17] << "!\n";
 		successfullyLoaded = false;
 	}
 
@@ -320,6 +326,8 @@ int main(int argc, char* args[])
 		Texture towerBaseLava{};
 		Texture towerBaseMagic{};
 
+		Texture towersText{};
+
 
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 		std::vector<Enemy> enemies;
@@ -333,14 +341,19 @@ int main(int argc, char* args[])
 		Texture timeTextTexture{};
 
 		//Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
-		Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT, 0 };
+		Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
 
 
 		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
 
+
+		//selection vector
+		std::vector<std::vector<SelectionTile>> selections{};
+		generateSelectionTiles(selections, gameState);
+
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist,towersText))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -397,7 +410,7 @@ int main(int argc, char* args[])
 
 						//selection "movement" & action
 						case SDLK_UP:
-							select.yPos = std::max(select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH, 0);
+							select.yPos = std::max(select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH);
 							break;
 						case SDLK_DOWN:
 							select.yPos = std::min(select.yPos + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_SCREEN_PANEL_HEIGHT - gameState.s_PANEL_TILE_SIDE_LENGTH);
@@ -473,6 +486,14 @@ int main(int argc, char* args[])
 				{
 					selectionTile.render(viewport.x, viewport.y, gameState);
 				}
+				
+				//selection panel rendering
+				towersText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 0, gameState);
+
+				towerBaseArrow.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+				towerBaseLava.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+				towerBaseMagic.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 2 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+
 
 
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
