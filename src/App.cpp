@@ -389,6 +389,8 @@ int main(int argc, char* args[])
 		// Create the vector containing placed towers
 		std::vector<Tower> towers;
 
+		towers.push_back(Tower{ towerBaseArrowPtr, 3000, 3000, 3, 2 });
+
 		// Create tower object templates
 		Tower tempArrowTower{ towerBaseArrowPtr, 0, 0, 3, 2 };
 		Tower tempLavaTower{ towerBaseLavaPtr, 0, 0, 1, 10 };
@@ -418,10 +420,12 @@ int main(int argc, char* args[])
 			//Event handler
 			SDL_Event e;
 
-			//Set text color as black
+			//Set text color as white
 			SDL_Color textColor = { 255, 255, 255, 255 };
 
 			gameState.m_Timer.start();
+
+			int attacksMade{ 0 };
 
 			//While application is running
 			while (!quit)
@@ -647,20 +651,32 @@ int main(int argc, char* args[])
 					stoneRoad.render((std::get<0>(pos) * gameState.m_TILE_SIDE_LENGTH), (std::get<1>(pos) * gameState.m_TILE_SIDE_LENGTH), gameState);
 				}
 
+
 				// Render placed towers and deal damage with them
 				for (Tower tower : towers)
 				{
 					tower.towerTexture->render(tower.xPos, tower.yPos, gameState);
-
-					for (Enemy enemy : enemies)
-					{
-						//tower.dealDamage(enemy);
-						enemy.takeDamage(tower.dps);
-						//std::cout << "Enemy's health is " << enemy.getHp() << '\n';
-						//std::cout << enemy.isDead << '\n';
-					}
-					std::cout << towers.size() << '\n';
 				}
+
+				if (attacksMade == (int)(gameState.m_Timer.getTicks() / 1000.f))
+				{
+					for (Tower tower : towers)
+					{
+						for (Enemy enemy : enemies)
+						{
+							tower.dealDamage(enemy);
+							//enemy.takeDamage(tower.dps);
+							std::cout << "Enemy's health is " << enemy.getHp() << '\n';
+							//std::cout << enemy.isDead << '\n';
+
+							//std::cout << towers.size() << '\n';
+
+						}
+					}
+					++attacksMade;
+					std::cout << '\n';
+				}
+				
 
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
