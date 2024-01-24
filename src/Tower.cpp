@@ -2,8 +2,6 @@
 
 #include "Enemy.h"
 
-#include <iostream>
-
 Tower::Tower(Texture* towerTexture, int x, int y, int range, int dps)
 	:towerTexture{ towerTexture }, xPos{ x }, yPos(y), range{ range }, dps{ dps } {}
 
@@ -19,7 +17,6 @@ int Tower::dealDamage(Enemy& enemy)
 			if (enemy.xPos == xPos + (x * 64) && enemy.yPos == yPos + (y * 64))
 			{
 				enemy.takeDamage(dps);
-				std::cout << "damage dealt" << '\n';
 			}
 		}
 	}

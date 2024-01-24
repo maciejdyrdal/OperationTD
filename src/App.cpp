@@ -404,7 +404,7 @@ int main(int argc, char* args[])
 		// Create the vector containing placed towers
 		std::vector<Tower> towers;
 
-		towers.push_back(Tower{ towerBaseArrowPtr, 3000, 3000, 3, 2 });
+		//towers.push_back(Tower{ towerBaseArrowPtr, 6000, 3000, 3, 2 });
 
 		// Create tower object templates
 		Tower tempArrowTower{ towerBaseArrowPtr, 0, 0, 3, 2 };
@@ -668,17 +668,18 @@ int main(int argc, char* args[])
 				}
 
 
-				// Render placed towers and deal damage with them
-				for (Tower tower : towers)
+				// Render placed towers
+				for (Tower &tower : towers)
 				{
 					tower.towerTexture->render(tower.xPos, tower.yPos, gameState);
 				}
 
+				// Deal damage with towers to enemies in range of them
 				if (attacksMade == (int)(gameState.m_Timer.getTicks() / 1000.f))
 				{
-					for (Tower tower : towers)
+					for (Tower &tower : towers)
 					{
-						for (Enemy enemy : enemies)
+						for (Enemy &enemy : enemies)
 						{
 							tower.dealDamage(enemy);
 							//enemy.takeDamage(tower.dps);
@@ -698,19 +699,20 @@ int main(int argc, char* args[])
 				heart.render((std::get<0>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), (std::get<1>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), gameState);
 
 				//heartLocation check if enemy reached
-				for (Enemy enemy : enemies)
+				for (Enemy &enemy : enemies)
 				{
 					//PLOG_INFO << enemy.xPos / 64;
 					//PLOG_INFO << enemy.yPos / 64;
 					if (enemy.xPos /64 == std::get<0>(gameState.heartLocation) && enemy.yPos /64 == std::get<1>(gameState.heartLocation)) {
-						PLOG_INFO << "enemy reached the heart";
+						std::cout << "enemy reached the heart";
 						//killing the enemy
 						enemy.isDead = true;
+						enemy.move(3000, 3000, gameState);
 
 						//-- health
 						--gameState.health;
 						if (gameState.health <= 0) {
-							PLOG_INFO << "You have failed!";
+							std::cout << "You have failed!";
 						}
 
 					}
@@ -738,16 +740,23 @@ int main(int argc, char* args[])
 				// Move each enemy to the next tile every few seconds
 				for (int i{ 0 }; i < gameState.enemyCount; ++i)
 				{
-					for (int j{ 0 }; j < gameState.enemyPath.size(); ++j)
+					if (!enemies[i].isDead)
 					{
-						if (enemies[i].timeToMove <= gameState.m_Timer.getTicks() / 1000.f && gameState.m_Timer.getTicks() / 1000.f <= enemies[i].timeToMove + 1 && enemies[i].moveCount == j)
+						for (int j{ 0 }; j < gameState.enemyPath.size(); ++j)
 						{
-							enemies[i].move(std::get<0>(gameState.enemyPath[j]) * 64, std::get<1>(gameState.enemyPath[j]) * 64, gameState);
-							++enemies[i].moveCount;
-							enemies[i].timeToMove += 2;
+							if (enemies[i].timeToMove <= gameState.m_Timer.getTicks() / 1000.f && gameState.m_Timer.getTicks() / 1000.f <= enemies[i].timeToMove + 1 && enemies[i].moveCount == j)
+							{
+								enemies[i].move(std::get<0>(gameState.enemyPath[j]) * 64, std::get<1>(gameState.enemyPath[j]) * 64, gameState);
+								++enemies[i].moveCount;
+								enemies[i].timeToMove += 2;
+							}
 						}
+						enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
 					}
-					enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
+					else
+					{
+						enemies[i].move(3000, 3000, gameState);
+					}
 				}
 
 				//Render timer
