@@ -379,14 +379,22 @@ int main(int argc, char* args[])
 		Texture timeTextTexture{};
 		Texture woodTextTexture{};
 
-		// Initialize the texture pointers for the player character and enemies
+
+
+		// Initialize the texture pointers for the player character, enemies and towers
 		Texture* characterTexturePtr{ &characterTexture };
 		Texture* enemyTexturePtr{ &enemyTexture };
 		Texture* panelSelectionPtr{ &panelSelection };
 		Texture* towerBaseArrowPtr{ &towerBaseArrow };
+		Texture* towerBaseLavaPtr{ &towerBaseLava };
+		Texture* towerBaseMagicPtr{ &towerBaseMagic };
 
-		// Create the player and enemy objects
+
+
+		// Create the player object
 		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
+
+		// Create the vector containing enemies
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
@@ -395,7 +403,12 @@ int main(int argc, char* args[])
 
 		// Create the vector containing placed towers
 		std::vector<Tower> towers;
-		Tower tempTower(towerBaseArrowPtr, 0, 0);
+
+		// Create tower object templates
+		Tower tempArrowTower{ towerBaseArrowPtr, 0, 0, 3, 2 };
+		Tower tempLavaTower{ towerBaseLavaPtr, 0, 0, 1, 10 };
+		Tower tempMagicTower{ towerBaseMagicPtr, 0, 0, 2, 5 };
+
 
 		//Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
 		Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
@@ -421,7 +434,7 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//Set text color as black
-			SDL_Color textColor = { 0, 0, 0, 0 };
+			SDL_Color textColor = { 255, 255, 255, 255 };
 
 			gameState.m_Timer.start();
 
@@ -461,12 +474,12 @@ int main(int argc, char* args[])
 						case SDLK_SPACE:
 							//buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerTexture;
 
-							tempTower.xPos = player.xPos;
+							/*tempTower.xPos = player.xPos;
 							tempTower.yPos = player.yPos;
 
 							towers.push_back(tempTower);
 
-							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;*/
 							break;
 
 						//selection "movement" & action
@@ -505,22 +518,41 @@ int main(int argc, char* args[])
 							switch (tempVar)
 							{
 							case 11:
-								//tow arrow
-								buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerBaseArrow;
-								buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+							{
+								// Place an arrow tower in the player's location
+								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
+								{
+									Tower tempTower{ towerBaseArrowPtr, player.xPos, player.yPos, 3, 2 };
+									towers.push_back(tempTower);
+
+									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+								}
 								break;
+							}	
 							case 21:
-								//tow lava
-								buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerBaseLava;
-								buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
-								break;
+							{
+								// Place a lava tower in the player's location
+								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
+								{
+									Tower tempTower{ towerBaseLavaPtr, player.xPos, player.yPos, 1, 10 };
+									towers.push_back(tempTower);
 
+									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+								}
+								break;
+							}
 							case 12:
-								//tow magic
-								buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerBaseMagic;
-								buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
-								break;
+							{
+								// Place a magic tower in the player's location
+								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
+								{
+									Tower tempTower{ towerBaseMagicPtr, player.xPos, player.yPos, 2, 5 };
+									towers.push_back(tempTower);
 
+									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+								}
+								break;
+							}
 							case 14:
 								//upg sword
 								PLOG_INFO << "UPGRADE COMPLETED";
@@ -640,9 +672,10 @@ int main(int argc, char* args[])
 					{
 						//tower.dealDamage(enemy);
 						enemy.takeDamage(tower.dps);
-						std::cout << "Enemy's health is " << enemy.getHp() << '\n';
-						std::cout << enemy.isDead << '\n';
+						//std::cout << "Enemy's health is " << enemy.getHp() << '\n';
+						//std::cout << enemy.isDead << '\n';
 					}
+					std::cout << towers.size() << '\n';
 				}
 
 
