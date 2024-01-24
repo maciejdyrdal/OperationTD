@@ -2,8 +2,8 @@
 
 #include "Enemy.h"
 
-Tower::Tower(Texture* towerTexture, int x, int y)
-	:towerTexture{ towerTexture }, xPos {x}, yPos(y) {}
+Tower::Tower(Texture* towerTexture, int x, int y, int range, int dps)
+	:towerTexture{ towerTexture }, xPos{ x }, yPos(y), range{ range }, dps{ dps } {}
 
 Tower::~Tower() {}
 

@@ -7,7 +7,7 @@
 class Tower
 {
 public:
-	Tower(Texture* towerTexture, int x, int y);
+	Tower(Texture* towerTexture, int x, int y, int range, int dps);
 
 	~Tower();
 
@@ -16,8 +16,8 @@ public:
 	int xPos;
 	int yPos;
 
-	int range{ 2 };
-	int dps{ 7 };
+	int range;
+	int dps;
 
 	int dealDamage(Enemy& enemy);
 };
