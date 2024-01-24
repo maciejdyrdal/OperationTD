@@ -83,7 +83,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword, Texture& wood_icon, Texture& bottomTexture, Texture& rightTexture)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword, Texture& wood_icon, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heart_icon)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -229,6 +229,18 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
+	if (!heart.loadFromFile(gameState.m_textureFilenames[23], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[23] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!heart_icon.loadFromFile(gameState.m_textureFilenames[24], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[24] << "!\n";
+		successfullyLoaded = false;
+	}
+
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
 }
@@ -341,11 +353,14 @@ int main(int argc, char* args[])
 		Texture selectionTile{};
 		Texture protagonist{};
 
+		Texture heart_icon{};
 		Texture wood_icon{};
 		Texture gem_icon{};
 		Texture iron_icon{};
 		Texture stone_icon{};
+		
 		Texture stoneRoad{};
+		Texture heart{};
 
 		Texture goblin{};
 		Texture knight{};
@@ -408,7 +423,7 @@ int main(int argc, char* args[])
 		generateSelectionTiles(selections, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword, wood_icon, bottomTexture, rightTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword, wood_icon, bottomTexture, rightTexture, heart, heart_icon))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -586,7 +601,7 @@ int main(int argc, char* args[])
 				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
 
 				gameState.s_WoodAmountText.str("");
-				gameState.s_WoodAmountText << "                  " << gameState.woodAmount << "                  " << gameState.stoneAmount << "                  " << gameState.ironAmount << "                  " << gameState.gemAmount;
+				gameState.s_WoodAmountText << "                  " << gameState.woodAmount << "                  " << gameState.stoneAmount << "                  " << gameState.ironAmount << "                  " << gameState.gemAmount << "                            " << gameState.health;
 
 
 				//Render text
@@ -627,11 +642,12 @@ int main(int argc, char* args[])
 				
 
 
-				//resources icon rendering
+				//resources and health icon rendering
 				wood_icon.render(40, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5,gameState);
 				stone_icon.render(40 + 100, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				iron_icon.render(40 + 200, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				gem_icon.render(40 + 300, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				heart_icon.render(40 + 450, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 
 				//selection panel rendering
 				towersText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 0, gameState);
@@ -676,7 +692,29 @@ int main(int argc, char* args[])
 					++attacksMade;
 					std::cout << '\n';
 				}
-				
+
+
+				//heartLocation render
+				heart.render((std::get<0>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), (std::get<1>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), gameState);
+
+				//heartLocation check if enemy reached
+				for (Enemy enemy : enemies)
+				{
+					//PLOG_INFO << enemy.xPos / 64;
+					//PLOG_INFO << enemy.yPos / 64;
+					if (enemy.xPos /64 == std::get<0>(gameState.heartLocation) && enemy.yPos /64 == std::get<1>(gameState.heartLocation)) {
+						PLOG_INFO << "enemy reached the heart";
+						//killing the enemy
+						enemy.isDead = true;
+
+						//-- health
+						--gameState.health;
+						if (gameState.health <= 0) {
+							PLOG_INFO << "You have failed!";
+						}
+
+					}
+				}
 
 				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
