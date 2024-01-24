@@ -49,10 +49,15 @@ public:
 
 	//In memory text stream
 	std::stringstream m_TimeText;
+	std::stringstream s_WoodAmountText;
 
-	const std::array<std::string, 20> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png", "img/stoneRoad.png", "img/protagonist.png", "img/towersText.png", "img/upgradesText.png", "img/upgradeSword.png"};
+	const std::array<std::string, 21> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png", "img/stoneRoad.png", "img/protagonist.png", "img/towersText.png", "img/upgradesText.png", "img/upgradeSword.png", "img/wood_icon.png"};
 	int enemyCount{ 5 };
-
+	
+	int woodAmount = 0;
+	int stoneAmount = 0;
+	int gemAmount = 0;
+	int ironAmount = 0;
 
 	std::vector<std::tuple<int, int>> enemyPath{ {14, 5}, {13, 5}, {12, 5}, {12, 4}, {12, 3}, {11, 3}, {10, 3}, {10, 4}, {10, 5}, {10, 6}, {10, 7} };
 

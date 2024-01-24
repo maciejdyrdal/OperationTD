@@ -83,7 +83,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword, Texture& wood_icon)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -115,7 +115,7 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	gameState.m_Font = TTF_OpenFont("fonts/Roboto-Black.ttf", gameState.m_FontSize);
+	gameState.m_Font = TTF_OpenFont("fonts/munro.ttf", gameState.m_FontSize);
 	if (gameState.m_Font == NULL)
 	{
 		PLOG_ERROR << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << '\n';
@@ -208,6 +208,12 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 	if (!upgradeSword.loadFromFile(gameState.m_textureFilenames[19], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[19] << "!\n";
+		successfullyLoaded = false;
+	}
+
+	if (!wood_icon.loadFromFile(gameState.m_textureFilenames[20], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[20] << "!\n";
 		successfullyLoaded = false;
 	}
 
@@ -321,6 +327,7 @@ int main(int argc, char* args[])
 		Texture selectionTile{};
 		Texture protagonist{};
 
+		Texture wood_icon{};
 		Texture gem_icon{};
 		Texture iron_icon{};
 		Texture stone_icon{};
@@ -341,6 +348,7 @@ int main(int argc, char* args[])
 
 		Texture textTexture{};
 		Texture timeTextTexture{};
+		Texture woodTextTexture{};
 
 		// Initialize the texture pointers for the player character and enemies
 		Texture* characterTexturePtr{ &characterTexture };
@@ -371,7 +379,7 @@ int main(int argc, char* args[])
 		generateSelectionTiles(selections, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword, wood_icon))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -527,8 +535,17 @@ int main(int argc, char* args[])
 				gameState.m_TimeText.str("");
 				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
 
+				gameState.s_WoodAmountText.str("");
+				gameState.s_WoodAmountText << "                  " << gameState.woodAmount << "                  " << gameState.stoneAmount << "                  " << gameState.ironAmount << "                  " << gameState.gemAmount;
+
+
 				//Render text
 				if (!timeTextTexture.loadFromRenderedText(gameState.m_TimeText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!woodTextTexture.loadFromRenderedText(gameState.s_WoodAmountText.str().c_str(), textColor, gameState))
 				{
 					PLOG_ERROR << "Unable to render time texture!\n";
 				}
@@ -555,6 +572,12 @@ int main(int argc, char* args[])
 					selectionTile.render(viewport.x, viewport.y, gameState);
 				}
 				
+				//resources icon rendering
+				wood_icon.render(40, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5,gameState);
+				stone_icon.render(40 + 100, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				iron_icon.render(40 + 200, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				gem_icon.render(40 + 300, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+
 				//selection panel rendering
 				towersText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 0, gameState);
 				uprgadesText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH * 3, gameState);
@@ -622,7 +645,8 @@ int main(int argc, char* args[])
 				}
 
 				//Render timer
-				timeTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
+				//timeTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
+				woodTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 10, gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
