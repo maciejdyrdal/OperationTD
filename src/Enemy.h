@@ -5,6 +5,7 @@
 
 #include "GameState.h"
 
+// Enemy class containing its texture, position, hp etc
 class Enemy
 {
 public:
@@ -17,11 +18,11 @@ public:
 
 	~Enemy();
 
-	// Deals damage to enemy and returns its health afterwards
 	int takeDamage(int damage, GameState& gameState);
 
 	int getHp();
 
+	// Moves to a given position if it is a valid tile
 	bool move(int x, int y, GameState& gameState);
 
 	int moveCount{ 0 };

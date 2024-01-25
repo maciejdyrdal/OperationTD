@@ -8,7 +8,7 @@ Tower::Tower(Texture* towerTexture, int x, int y, int range, int dps, int attack
 
 Tower::~Tower() {}
 
-// Deals damage to enemy if in range and returns its hp afterwards
+// Deal damage to enemy if in range and return its hp afterwards
 int Tower::dealDamage(Enemy& enemy, GameState& gameState)
 {
 	for (int x{ -range }; x <= range; ++x)

@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Texture.h"
 
+// Player class containing its position and texture
 class Player
 {
 public:
