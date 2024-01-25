@@ -17,20 +17,32 @@ int Enemy::takeDamage(int damage, GameState& gameState)
 	{
 		hp = 0;
 		isDead = true;
-		if (maxHp >= 10)
-		{
-			gameState.woodAmount += Random::get(maxHp - 10, maxHp + 10);
-			gameState.stoneAmount += Random::get(maxHp - 10, maxHp + 10);
-			gameState.gemAmount += Random::get(maxHp - 10, maxHp + 10);
-			gameState.ironAmount += Random::get(maxHp - 10, maxHp + 10);
+		
+		//resources randomizer
+		//will it drop anything?
+		if (Random::get(0, 1) == 1) {
+
+			//will it drop wood?
+			if (Random::get(0, 2) == 1) {
+				++gameState.woodAmount;
+			}
+			//will it drop stone?
+			else if(Random::get(0, 2) == 1){
+				++gameState.stoneAmount;
+			}
+			//will it drop iron?
+			else if (Random::get(0, 1) == 1) {
+				++gameState.ironAmount;
+			}
+			//it will drop gem
+			else {
+				++gameState.gemAmount;
+			}
+
 		}
-		else
-		{
-			gameState.woodAmount += Random::get(0, maxHp + 10);
-			gameState.stoneAmount += Random::get(0, maxHp + 10);
-			gameState.gemAmount += Random::get(0, maxHp + 10);
-			gameState.ironAmount += Random::get(0, maxHp + 10);
-		}
+
+		
+		
 		
 	}
 	else
