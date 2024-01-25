@@ -500,8 +500,33 @@ int main(int argc, char* args[])
 			// Main loop flag
 			bool quit{ false };
 
+			// Flag for displaying the starting menu
+			bool displayMenu{ true };
+
 			// Event handler
 			SDL_Event e;
+
+			while (displayMenu)
+			{
+				while (SDL_PollEvent(&e) != 0)
+				{
+					if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+					{
+						displayMenu = false;
+					}
+				}
+
+				// Clear screen
+				SDL_SetRenderDrawColor(gameState.m_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_RenderClear(gameState.m_Renderer);
+
+				// Put menu displaying components here
+				protagonistTexture.render(0, 0, gameState);
+
+				//Update screen
+				SDL_RenderPresent(gameState.m_Renderer);
+			}
+
 
 			// Set text color as white
 			SDL_Color textColor = { 255, 255, 255, 255 };
