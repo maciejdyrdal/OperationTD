@@ -407,9 +407,9 @@ int main(int argc, char* args[])
 		//towers.push_back(Tower{ towerBaseArrowPtr, 6000, 3000, 3, 2 });
 
 		// Create tower object templates
-		Tower tempArrowTower{ towerBaseArrowPtr, 0, 0, 3, 2 };
-		Tower tempLavaTower{ towerBaseLavaPtr, 0, 0, 1, 10 };
-		Tower tempMagicTower{ towerBaseMagicPtr, 0, 0, 2, 5 };
+		Tower tempArrowTower{ towerBaseArrowPtr, 0, 0, 3, 2, 3 };
+		Tower tempLavaTower{ towerBaseLavaPtr, 0, 0, 1, 10, 8 };
+		Tower tempMagicTower{ towerBaseMagicPtr, 0, 0, 2, 5, 5 };
 
 
 		//Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
@@ -526,7 +526,7 @@ int main(int argc, char* args[])
 								// Place an arrow tower in the player's location
 								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
 								{
-									Tower tempTower{ towerBaseArrowPtr, player.xPos, player.yPos, 3, 2 };
+									Tower tempTower{ towerBaseArrowPtr, player.xPos, player.yPos, 3, 2, 3 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
@@ -538,7 +538,7 @@ int main(int argc, char* args[])
 								// Place a lava tower in the player's location
 								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
 								{
-									Tower tempTower{ towerBaseLavaPtr, player.xPos, player.yPos, 1, 10 };
+									Tower tempTower{ towerBaseLavaPtr, player.xPos, player.yPos, 1, 10, 8 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
@@ -550,7 +550,7 @@ int main(int argc, char* args[])
 								// Place a magic tower in the player's location
 								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
 								{
-									Tower tempTower{ towerBaseMagicPtr, player.xPos, player.yPos, 2, 5 };
+									Tower tempTower{ towerBaseMagicPtr, player.xPos, player.yPos, 2, 5, 5 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
@@ -701,19 +701,14 @@ int main(int argc, char* args[])
 				//heartLocation check if enemy reached
 				for (Enemy &enemy : enemies)
 				{
-					//PLOG_INFO << enemy.xPos / 64;
-					//PLOG_INFO << enemy.yPos / 64;
-					if (enemy.xPos /64 == std::get<0>(gameState.heartLocation) && enemy.yPos /64 == std::get<1>(gameState.heartLocation)) {
+					if (enemy.xPos / 64 == std::get<0>(gameState.heartLocation) && enemy.yPos / 64 == std::get<1>(gameState.heartLocation) && !enemy.isDead) {
 						std::cout << "enemy reached the heart";
 						//killing the enemy
 						enemy.isDead = true;
-						enemy.move(3000, 3000, gameState);
+						//enemy.move(1920, 1920, gameState);
 
 						//-- health
 						--gameState.health;
-						if (gameState.health <= 0) {
-							std::cout << "You have failed!";
-						}
 
 					}
 				}
@@ -757,6 +752,11 @@ int main(int argc, char* args[])
 					{
 						enemies[i].move(3000, 3000, gameState);
 					}
+				}
+
+				if (gameState.health <= 0) 
+				{
+					std::cout << "You have failed!";
 				}
 
 				//Render timer
