@@ -3,8 +3,8 @@
 #include "GameState.h"
 #include "Random.h"
 
-Enemy::Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove)
-	: enemyTexture{ enemyTexture }, xPos{ xPos }, yPos{ yPos }, hp{ hp }, timeToMove{ timeToMove } 
+Enemy::Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove, int secondsPerMove)
+	: enemyTexture{ enemyTexture }, xPos{ xPos }, yPos{ yPos }, hp{ hp }, timeToMove{ timeToMove }, secondsPerMove{ secondsPerMove } 
 {
 	maxHp = hp;
 }
@@ -27,7 +27,7 @@ int Enemy::takeDamage(int damage, GameState& gameState)
 				++gameState.woodAmount;
 			}
 			//will it drop stone?
-			else if(Random::get(0, 2) == 1){
+			else if (Random::get(0, 2) == 1){
 				++gameState.stoneAmount;
 			}
 			//will it drop iron?
@@ -40,10 +40,6 @@ int Enemy::takeDamage(int damage, GameState& gameState)
 			}
 
 		}
-
-		
-		
-		
 	}
 	else
 	{

@@ -13,7 +13,7 @@ public:
 	int xPos;
 	int yPos;
 
-	Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove);
+	Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove, int secondsPerMove);
 
 	~Enemy();
 
@@ -34,6 +34,7 @@ private:
 
 	int maxHp;
 
+	int secondsPerMove;
 };
 
 #endif // !ENEMY_H
