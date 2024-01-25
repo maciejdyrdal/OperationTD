@@ -626,8 +626,8 @@ int main(int argc, char* args[])
 				}
 
 				//Set text to be rendered
-				//gameState.m_TimeText.str("");
-				//gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
+				gameState.m_TimeText.str("");
+				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
 
 				gameState.s_WoodAmountText.str("");
 				gameState.s_WoodAmountText << gameState.woodAmount;
@@ -729,6 +729,11 @@ int main(int argc, char* args[])
 
 				int tempVar = tempX * 10 + tempY;
 
+				gameState.s_WoodCostAmountText.str("");
+				gameState.s_StoneCostAmountText.str("");
+				gameState.s_IronCostAmountText.str("");
+				gameState.s_GemCostAmountText.str("");
+
 				switch (tempVar) {
 				case 11:
 					//icon render
@@ -738,43 +743,10 @@ int main(int argc, char* args[])
 					gem_icon.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
-					gameState.s_WoodCostAmountText.str("");
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.arrowTowerCost);
-
-					gameState.s_StoneCostAmountText.str("");
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.arrowTowerCost);
-
-					gameState.s_IronCostAmountText.str("");
 					gameState.s_IronCostAmountText << std::get<2>(gameState.arrowTowerCost);
-
-					gameState.s_GemCostAmountText.str("");
 					gameState.s_GemCostAmountText << std::get<3>(gameState.arrowTowerCost);
-
-					if (!woodCostAmountTexture.loadFromRenderedText(gameState.s_WoodCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!stoneCostAmountTexture.loadFromRenderedText(gameState.s_StoneCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!ironCostAmountTexture.loadFromRenderedText(gameState.s_IronCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!gemCostAmountTexture.loadFromRenderedText(gameState.s_GemCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					woodCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 13, gameState);
-					stoneCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 43, gameState);
-					ironCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 73, gameState);
-					gemCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 103, gameState);
-
 
 					break;
 
@@ -786,42 +758,10 @@ int main(int argc, char* args[])
 					gem_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
-					gameState.s_WoodCostAmountText.str("");
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.lavaTowerCost);
-
-					gameState.s_StoneCostAmountText.str("");
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.lavaTowerCost);
-
-					gameState.s_IronCostAmountText.str("");
 					gameState.s_IronCostAmountText << std::get<2>(gameState.lavaTowerCost);
-
-					gameState.s_GemCostAmountText.str("");
 					gameState.s_GemCostAmountText << std::get<3>(gameState.lavaTowerCost);
-
-					if (!woodCostAmountTexture.loadFromRenderedText(gameState.s_WoodCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!stoneCostAmountTexture.loadFromRenderedText(gameState.s_StoneCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!ironCostAmountTexture.loadFromRenderedText(gameState.s_IronCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!gemCostAmountTexture.loadFromRenderedText(gameState.s_GemCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					woodCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 13, gameState);
-					stoneCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 43, gameState);
-					ironCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 73, gameState);
-					gemCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 103, gameState);
 
 					break;
 
@@ -833,42 +773,10 @@ int main(int argc, char* args[])
 					gem_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
-					gameState.s_WoodCostAmountText.str("");
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.magicTowerCost);
-
-					gameState.s_StoneCostAmountText.str("");
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.magicTowerCost);
-
-					gameState.s_IronCostAmountText.str("");
 					gameState.s_IronCostAmountText << std::get<2>(gameState.magicTowerCost);
-
-					gameState.s_GemCostAmountText.str("");
 					gameState.s_GemCostAmountText << std::get<3>(gameState.magicTowerCost);
-
-					if (!woodCostAmountTexture.loadFromRenderedText(gameState.s_WoodCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!stoneCostAmountTexture.loadFromRenderedText(gameState.s_StoneCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!ironCostAmountTexture.loadFromRenderedText(gameState.s_IronCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!gemCostAmountTexture.loadFromRenderedText(gameState.s_GemCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					woodCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 13, gameState);
-					stoneCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 43, gameState);
-					ironCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 73, gameState);
-					gemCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 103, gameState);
 
 					break;
 
@@ -880,48 +788,40 @@ int main(int argc, char* args[])
 					gem_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
-					gameState.s_WoodCostAmountText.str("");
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.damageUpgradeCost);
-
-					gameState.s_StoneCostAmountText.str("");
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.damageUpgradeCost);
-
-					gameState.s_IronCostAmountText.str("");
 					gameState.s_IronCostAmountText << std::get<2>(gameState.damageUpgradeCost);
-
-					gameState.s_GemCostAmountText.str("");
 					gameState.s_GemCostAmountText << std::get<3>(gameState.damageUpgradeCost);
-
-					if (!woodCostAmountTexture.loadFromRenderedText(gameState.s_WoodCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!stoneCostAmountTexture.loadFromRenderedText(gameState.s_StoneCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!ironCostAmountTexture.loadFromRenderedText(gameState.s_IronCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					if (!gemCostAmountTexture.loadFromRenderedText(gameState.s_GemCostAmountText.str().c_str(), textColor, gameState))
-					{
-						PLOG_ERROR << "Unable to render time texture!\n";
-					}
-
-					woodCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 13, gameState);
-					stoneCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 43, gameState);
-					ironCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 73, gameState);
-					gemCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 103, gameState);
-
-
+					
 					break;
 
+					
+				}
+				if (!woodCostAmountTexture.loadFromRenderedText(gameState.s_WoodCostAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
 				}
 
+				if (!stoneCostAmountTexture.loadFromRenderedText(gameState.s_StoneCostAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!ironCostAmountTexture.loadFromRenderedText(gameState.s_IronCostAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!gemCostAmountTexture.loadFromRenderedText(gameState.s_GemCostAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+				
+
+				woodCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 13, gameState);
+				stoneCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 43, gameState);
+				ironCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 73, gameState);
+				gemCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 103, gameState);
 
 
 				// Render path for enemies
