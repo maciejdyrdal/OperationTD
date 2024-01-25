@@ -83,7 +83,7 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword, Texture& wood_icon, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heart_icon)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword, Texture& wood_icon, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heart_icon, Texture& assasinTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -241,6 +241,12 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
+	if (!assasinTexture.loadFromFile(gameState.m_textureFilenames[25], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[25] << "!\n";
+		successfullyLoaded = false;
+	}
+
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
 }
@@ -344,7 +350,7 @@ int main(int argc, char* args[])
 		Texture groundTexture{};
 		Texture characterTexture{};
 		Texture towerTexture{};
-		Texture enemyTexture{};
+		
 
 		Texture panelSelection{};
 		Texture bottomTexture{};
@@ -362,9 +368,11 @@ int main(int argc, char* args[])
 		Texture stoneRoad{};
 		Texture heart{};
 
-		Texture goblin{};
-		Texture knight{};
-		Texture smallGoblin{};
+		Texture enemyTexture{};
+		Texture assasinTexture{};
+		Texture goblinTexture{};
+		Texture knightTexture{};
+		Texture smallGoblinTexture{};
 
 		Texture towerBaseArrow{};
 		Texture towerBaseLava{};
@@ -393,6 +401,8 @@ int main(int argc, char* args[])
 		// Initialize the texture pointers for the player character, enemies and towers
 		Texture* characterTexturePtr{ &characterTexture };
 		Texture* enemyTexturePtr{ &enemyTexture };
+
+
 		Texture* panelSelectionPtr{ &panelSelection };
 		Texture* towerBaseArrowPtr{ &towerBaseArrow };
 		Texture* towerBaseLavaPtr{ &towerBaseLava };
@@ -432,7 +442,7 @@ int main(int argc, char* args[])
 		generateSelectionTiles(selections, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblin, knight, smallGoblin, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword, wood_icon, bottomTexture, rightTexture, heart, heart_icon))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword, wood_icon, bottomTexture, rightTexture, heart, heart_icon, assasinTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
