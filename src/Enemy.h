@@ -29,12 +29,12 @@ public:
 	int timeToMove;
 
 	bool isDead{ false };
+
+	int secondsPerMove;
 private:
 	int hp;
 
 	int maxHp;
-
-	int secondsPerMove;
 };
 
 #endif // !ENEMY_H

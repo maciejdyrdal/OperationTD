@@ -64,7 +64,13 @@ public:
 
 	// Array containing the filenames of textures to be loaded
 	const std::array<std::string, 26> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png", "img/stoneRoad.png", "img/protagonist.png", "img/towersText.png", "img/upgradesText.png", "img/upgradeSword.png", "img/wood_icon.png", "img/bottomTexture.png", "img/rightTexture.png", "img/heart.png", "img/heart_icon.png", "img/assasin.png"};
-	int enemyCount{ 5 };
+	
+	// Number of each type of enemy
+	int smallGoblinCount{ 20 };
+	int goblinCount{ 10 };
+	int knightCount{ 5 };
+	int assassinCount{ 10 };
+	//int enemyCount{ 5 };
 	
 	// Starting amounts of building resources 
 	
@@ -91,7 +97,7 @@ public:
 	std::tuple<int, int, int, int> damageUpgradeCost{ 1, 1, 3, 5 };
 
 
-	// Hit points which get reduces whenever an enemy reaches the end tile; lowering this value to 0 means the player has lost the game
+	// Hit points which get reduced whenever an enemy reaches the end tile; lowering this value to 0 means the player has lost the game
 	int health = 10;
 
 	// Predetermined path for enemies to follow
