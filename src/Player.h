@@ -13,6 +13,12 @@ public:
 	int xPos;
 	int yPos;
 
+	// Number of attacks player can perform during the game
+	int playerAttacksLeft{ 10 };
+
+	// Amount of damage player deals to enemies
+	int playerDamage{ 10 };
+
 	Player(Texture* playerTexture, int xPos, int yPos);
 
 	~Player();

@@ -594,14 +594,16 @@ int main(int argc, char* args[])
 							break;
 
 						case SDLK_SPACE:
-							//buildingTiles[player.xPos / 64][player.yPos / 64].tileTexture = &towerTexture;
-
-							/*tempTower.xPos = player.xPos;
-							tempTower.yPos = player.yPos;
-
-							towers.push_back(tempTower);
-
-							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;*/
+							// Handle player attacks
+							for (Enemy& enemy : enemies)
+							{
+								if (enemy.xPos == player.xPos + gameState.m_TILE_SIDE_LENGTH && enemy.yPos == player.yPos && player.playerAttacksLeft > 0 && !enemy.isDead)
+								{
+									enemy.takeDamage(player.playerDamage, gameState);
+									--player.playerAttacksLeft;
+									//std::cout << "Player attacked, attacks left: " << player.playerAttacksLeft << '\n';
+								}
+							}
 							break;
 
 						// Handle selector "movement" and action
@@ -985,19 +987,7 @@ int main(int argc, char* args[])
 					}
 				}
 
-				// Check whether player has lost
-				if (gameState.health <= 0) 
-				{
-					std::cout << "You have failed!";
-					gameState.m_Timer.pause();
-				}
-
-				// Check whether player has won
-				if (enemiesDead == enemies.size())
-				{
-					std::cout << "You have won!";
-					gameState.m_Timer.pause();
-				}
+				
 
 				// Render resources amounts
 				woodTextTexture.render(80, gameState.m_SCREEN_HEIGHT + 10, gameState);
@@ -1011,6 +1001,20 @@ int main(int argc, char* args[])
 
 				// Render the selector
 				select.playerTexture->render(select.xPos, select.yPos, gameState);
+
+				// Check whether player has lost
+				if (gameState.health <= 0)
+				{
+					std::cout << "You have failed!";
+					gameState.m_Timer.pause();
+				}
+
+				// Check whether player has won
+				if (enemiesDead == enemies.size())
+				{
+					std::cout << "You have won!";
+					gameState.m_Timer.pause();
+				}
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
