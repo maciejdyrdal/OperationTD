@@ -24,10 +24,10 @@
 
 bool init(GameState& gameState)
 {
-	//Initialization flag
+	// Initialization flag
 	bool successfullyInitialized{ true };
 
-	//Initialize SDL
+	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		PLOG_ERROR << "SDL could not initialize! SDL_Error: " << SDL_GetError() << '\n';
@@ -35,13 +35,13 @@ bool init(GameState& gameState)
 	}
 	else
 	{
-		//Set texture filtering to linear
+		// Set texture filtering to linear
 		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
 		{
 			PLOG_WARNING << "Warning: Linear texture filtering not enabled!";
 		}
 
-		//Create window
+		// Create window
 		gameState.m_Window = SDL_CreateWindow("OperationTD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gameState.m_SCREEN_WIDTH + gameState.s_SCREEN_PANEL_WIDTH, gameState.m_SCREEN_HEIGHT + 50, SDL_WINDOW_SHOWN);
 		if (gameState.m_Window == NULL)
 		{
@@ -50,7 +50,7 @@ bool init(GameState& gameState)
 		}
 		else
 		{
-			//Create renderer for window
+			// Create renderer for window
 			gameState.m_Renderer = SDL_CreateRenderer(gameState.m_Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 			if (gameState.m_Renderer == NULL)
 			{
@@ -59,10 +59,10 @@ bool init(GameState& gameState)
 			}
 			else
 			{
-				//Initialize renderer color
+				// Initialize renderer color
 				SDL_SetRenderDrawColor(gameState.m_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-				//Initialize PNG loading
+				// Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
 				if (!(IMG_Init(imgFlags) & imgFlags))
 				{
@@ -70,7 +70,7 @@ bool init(GameState& gameState)
 					successfullyInitialized = false;
 				}
 
-				//Initialize SDL_ttf
+				// Initialize SDL_ttf
 				if (TTF_Init() == -1)
 				{
 					PLOG_ERROR << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << '\n';
@@ -83,7 +83,14 @@ bool init(GameState& gameState)
 	return successfullyInitialized;
 }
 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSword, Texture& wood_icon, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heart_icon, Texture& assasinTexture)
+// Absolutely horrendous function that loads all game textures and fonts thanks to the wonders of the SDL2 library
+// SDL2 refuses to work with textures that are stored in a runtime-generated data structure (such as a vector)
+// The code compiles just fine, but the textures are not displayed on the screen
+// Therefore, the loadMedia() function has over 20 arguments with the texture names
+// They could be stored in an std::array or C-style array, but our soultion is (arguably) more readable
+//  - the textures are referred to by their variable names instead of indexed array elements 
+// Lord have mercy upon us
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSwordTexture, Texture& woodIconTexture, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -103,7 +110,7 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[2] << "!\n";
 		successfullyLoaded = false;
 	}
-	if (!panelSelection.loadFromFile(gameState.m_textureFilenames[3], gameState))
+	if (!panelSelectionTexture.loadFromFile(gameState.m_textureFilenames[3], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[3] << "!\n";
 		successfullyLoaded = false;
@@ -127,19 +134,19 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	if (!gem_icon.loadFromFile(gameState.m_textureFilenames[6], gameState))
+	if (!gemIconTexture.loadFromFile(gameState.m_textureFilenames[6], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[6] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!iron_icon.loadFromFile(gameState.m_textureFilenames[7], gameState))
+	if (!ironIconTexture.loadFromFile(gameState.m_textureFilenames[7], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[7] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!stone_icon.loadFromFile(gameState.m_textureFilenames[8], gameState))
+	if (!stoneIconTexture.loadFromFile(gameState.m_textureFilenames[8], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[8] << "!\n";
 		successfullyLoaded = false;
@@ -163,25 +170,25 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	if (!towerBaseArrow.loadFromFile(gameState.m_textureFilenames[12], gameState))
+	if (!towerBaseArrowTexture.loadFromFile(gameState.m_textureFilenames[12], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[12] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!towerBaseLava.loadFromFile(gameState.m_textureFilenames[13], gameState))
+	if (!towerBaseLavaTexture.loadFromFile(gameState.m_textureFilenames[13], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[13] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!towerBaseMagic.loadFromFile(gameState.m_textureFilenames[14], gameState))
+	if (!towerBaseMagicTexture.loadFromFile(gameState.m_textureFilenames[14], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[14] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!stoneRoad.loadFromFile(gameState.m_textureFilenames[15], gameState))
+	if (!stoneRoadTexture.loadFromFile(gameState.m_textureFilenames[15], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[15] << "!\n";
 		successfullyLoaded = false;
@@ -205,13 +212,13 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	if (!upgradeSword.loadFromFile(gameState.m_textureFilenames[19], gameState))
+	if (!upgradeSwordTexture.loadFromFile(gameState.m_textureFilenames[19], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[19] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!wood_icon.loadFromFile(gameState.m_textureFilenames[20], gameState))
+	if (!woodIconTexture.loadFromFile(gameState.m_textureFilenames[20], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[20] << "!\n";
 		successfullyLoaded = false;
@@ -235,7 +242,7 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	if (!heart_icon.loadFromFile(gameState.m_textureFilenames[24], gameState))
+	if (!heartIconTexture.loadFromFile(gameState.m_textureFilenames[24], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[24] << "!\n";
 		successfullyLoaded = false;
@@ -251,6 +258,7 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 	return successfullyLoaded;
 }
 
+// Generate the tiles for the game map
 bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState)
 {
 	bool successfullyGenerated{ false };
@@ -269,6 +277,7 @@ bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState)
 	return successfullyGenerated;
 }
 
+// Create a Viewport object which stores the tile coordinates and sizes
 bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState)
 {
 	bool successfullyGenerated{ false };
@@ -285,8 +294,7 @@ bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameStat
 	return successfullyGenerated;
 }
 
-//Selection tiles generating
-
+// Generate the tiles for the selection menu
 bool generateSelectionTiles(std::vector<std::vector<SelectionTile>>& Selectiontiles, GameState& gameState)
 {
 	bool successfullyGenerated{ false };
@@ -305,6 +313,7 @@ bool generateSelectionTiles(std::vector<std::vector<SelectionTile>>& Selectionti
 	return successfullyGenerated;
 }
 
+// Create a Viewport object which stores the selection tile coordinates and sizes
 bool generateSelectionViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState)
 {
 	bool successfullyGenerated{ false };
@@ -326,20 +335,20 @@ bool generateSelectionViewportTiles(std::vector<SDL_Rect>& viewports, GameState&
 
 int main(int argc, char* args[])
 {
-	//Initialize the logger (both to the text file and the console)
+	// Initialize the logger (both to the text file and the console)
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
 
 	PLOG_INFO << "Starting app...";
 
-	//Create pointers to objects representing the window, renderer and textures which will be passed to functions along the whole app's life
+	// Create pointers to objects representing the window, renderer and textures which will be passed to functions along the whole app's life
 	SDL_Window* window{ NULL };
 	SDL_Renderer* renderer{ NULL };
 
-	//Initialize the gameState object which holds pointers to various app components and constants (such as window size)
+	// Initialize the gameState object which holds pointers to various app components and constants (such as window size)
 	GameState gameState{ window, renderer };
 
-	//Start up SDL and create window
+	// Start up SDL and create window
 	if (!init(gameState))
 	{
 		PLOG_ERROR << "Failed to initialize!\n";
@@ -347,42 +356,48 @@ int main(int argc, char* args[])
 	else
 	{
 		// Initialize the texture objects
+
+		// Old textures (deprecated)
 		Texture groundTexture{};
 		Texture characterTexture{};
 		Texture towerTexture{};
+		Texture enemyTexture{};
 		
-
-		Texture panelSelection{};
+		// Selection UI textures
+		Texture panelSelectionTexture{};
 		Texture bottomTexture{};
 		Texture rightTexture{};
-
 		Texture selectionTile{};
-		Texture protagonist{};
+		Texture upgradeSwordTexture{};
 
-		Texture heart_icon{};
-		Texture wood_icon{};
-		Texture gem_icon{};
-		Texture iron_icon{};
-		Texture stone_icon{};
+		// Player character texture
+		Texture protagonistTexture{};
+
+		// Icon textures
+		Texture heartIconTexture{};
+		Texture woodIconTexture{};
+		Texture gemIconTexture{};
+		Texture ironIconTexture{};
+		Texture stoneIconTexture{};
 		
-		Texture stoneRoad{};
-		Texture heart{};
+		// Road textures
+		Texture stoneRoadTexture{};
+		Texture heartRoadTexture{};
 
-		Texture enemyTexture{};
+		// Enemy textures
 		Texture assasinTexture{};
 		Texture goblinTexture{};
 		Texture knightTexture{};
 		Texture smallGoblinTexture{};
 
-		Texture towerBaseArrow{};
-		Texture towerBaseLava{};
-		Texture towerBaseMagic{};
+		// Tower textures
+		Texture towerBaseArrowTexture{};
+		Texture towerBaseLavaTexture{};
+		Texture towerBaseMagicTexture{};
 
-		Texture upgradeSword{};
-
+		// Text textures
 		Texture towersText{};
 		Texture uprgadesText{};
-
 		Texture textTexture{};
 		Texture timeTextTexture{};
 		Texture woodTextTexture{};
@@ -390,49 +405,45 @@ int main(int argc, char* args[])
 		Texture ironTextTexture{};
 		Texture gemTextTexture{};
 		Texture heartTextTexture{};
-
 		Texture woodCostAmountTexture{};
 		Texture stoneCostAmountTexture{};
 		Texture ironCostAmountTexture{};
 		Texture gemCostAmountTexture{};
 
 
-
 		// Initialize the texture pointers for the player character, enemies and towers
-		Texture* characterTexturePtr{ &characterTexture };
+		Texture* protagonistTexturePtr{ &protagonistTexture };
 		Texture* enemyTexturePtr{ &enemyTexture };
 
-
-		Texture* panelSelectionPtr{ &panelSelection };
-		Texture* towerBaseArrowPtr{ &towerBaseArrow };
-		Texture* towerBaseLavaPtr{ &towerBaseLava };
-		Texture* towerBaseMagicPtr{ &towerBaseMagic };
-
+		Texture* panelSelectionTexturePtr{ &panelSelectionTexture };
+		Texture* towerBaseArrowTexturePtr{ &towerBaseArrowTexture };
+		Texture* towerBaseLavaTexturePtr{ &towerBaseLavaTexture };
+		Texture* towerBaseMagicTexturePtr{ &towerBaseMagicTexture };
 
 
 		// Create the player object
-		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
+		Player player{ protagonistTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		// Create the vector containing enemies
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
+
 			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
 		}
 
 		// Create the vector containing placed towers
 		std::vector<Tower> towers;
 
-		//towers.push_back(Tower{ towerBaseArrowPtr, 6000, 3000, 3, 2 });
 
 		// Create tower object templates
-		Tower tempArrowTower{ towerBaseArrowPtr, 0, 0, 3, 2, 3 };
-		Tower tempLavaTower{ towerBaseLavaPtr, 0, 0, 1, 10, 8 };
-		Tower tempMagicTower{ towerBaseMagicPtr, 0, 0, 2, 5, 5 };
+		//Tower tempArrowTower{ towerBaseArrowTexturePtr, 0, 0, 3, 2, 3 };
+		//Tower tempLavaTower{ towerBaseLavaTexturePtr, 0, 0, 1, 10, 8 };
+		//Tower tempMagicTower{ towerBaseMagicTexturePtr, 0, 0, 2, 5, 5 };
 
 
-		//Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
-		Player select{ panelSelectionPtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
+		//Player select{ panelSelectionTexturePtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
+		Player select{ panelSelectionTexturePtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
 
 		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
@@ -442,7 +453,7 @@ int main(int argc, char* args[])
 		generateSelectionTiles(selections, gameState);
 
 		//Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelection, selectionTile, enemyTexture, gem_icon, iron_icon, stone_icon, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrow, towerBaseLava, towerBaseMagic, stoneRoad, protagonist, towersText, uprgadesText, upgradeSword, wood_icon, bottomTexture, rightTexture, heart, heart_icon, assasinTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelectionTexture, selectionTile, enemyTexture, gemIconTexture, ironIconTexture, stoneIconTexture, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrowTexture, towerBaseLavaTexture, towerBaseMagicTexture, stoneRoadTexture, protagonistTexture, towersText, uprgadesText, upgradeSwordTexture, woodIconTexture, bottomTexture, rightTexture, heartRoadTexture, heartIconTexture, assasinTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -545,7 +556,7 @@ int main(int argc, char* args[])
 								// Place an arrow tower in the player's location
 								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding && gameState.woodAmount >= std::get<0>(gameState.arrowTowerCost) && gameState.stoneAmount >= std::get<1>(gameState.arrowTowerCost) && gameState.gemAmount >= std::get<2>(gameState.arrowTowerCost) && gameState.ironAmount >= std::get<3>(gameState.arrowTowerCost))
 								{
-									Tower tempTower{ towerBaseArrowPtr, player.xPos, player.yPos, 3, 2, 3 };
+									Tower tempTower{ towerBaseArrowTexturePtr, player.xPos, player.yPos, 3, 2, 3 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
@@ -561,7 +572,7 @@ int main(int argc, char* args[])
 								// Place a lava tower in the player's location
 								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding && gameState.woodAmount >= std::get<0>(gameState.lavaTowerCost) && gameState.stoneAmount >= std::get<1>(gameState.lavaTowerCost) && gameState.gemAmount >= std::get<2>(gameState.lavaTowerCost) && gameState.ironAmount >= std::get<3>(gameState.lavaTowerCost))
 								{
-									Tower tempTower{ towerBaseLavaPtr, player.xPos, player.yPos, 1, 10, 8 };
+									Tower tempTower{ towerBaseLavaTexturePtr, player.xPos, player.yPos, 1, 10, 8 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
@@ -577,7 +588,7 @@ int main(int argc, char* args[])
 								// Place a magic tower in the player's location
 								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding && gameState.woodAmount >= std::get<0>(gameState.magicTowerCost) && gameState.stoneAmount >= std::get<1>(gameState.magicTowerCost) && gameState.gemAmount >= std::get<2>(gameState.magicTowerCost) && gameState.ironAmount >= std::get<3>(gameState.magicTowerCost))
 								{
-									Tower tempTower{ towerBaseMagicPtr, player.xPos, player.yPos, 2, 5, 5 };
+									Tower tempTower{ towerBaseMagicTexturePtr, player.xPos, player.yPos, 2, 5, 5 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
@@ -706,22 +717,22 @@ int main(int argc, char* args[])
 
 
 				//resources and health icon rendering
-				wood_icon.render(40, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5,gameState);
-				stone_icon.render(40 + 100, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
-				iron_icon.render(40 + 200, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
-				gem_icon.render(40 + 300, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
-				heart_icon.render(40 + 450, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				woodIconTexture.render(40, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5,gameState);
+				stoneIconTexture.render(40 + 100, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				ironIconTexture.render(40 + 200, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				gemIconTexture.render(40 + 300, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				heartIconTexture.render(40 + 450, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 
 				//selection panel rendering
 				towersText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 0, gameState);
 				uprgadesText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH * 3, gameState);
 
 
-				towerBaseArrow.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
-				towerBaseLava.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
-				towerBaseMagic.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 2 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+				towerBaseArrowTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+				towerBaseLavaTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+				towerBaseMagicTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 2 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 
-				upgradeSword.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 4 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
+				upgradeSwordTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 4 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 
 				//selection cost rendering
 				int tempX = (select.xPos - gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT) / 64 + 1;
@@ -737,10 +748,10 @@ int main(int argc, char* args[])
 				switch (tempVar) {
 				case 11:
 					//icon render
-					wood_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
-					stone_icon.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
-					iron_icon.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
-					gem_icon.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
+					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
+					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
+					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
+					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.arrowTowerCost);
@@ -752,10 +763,10 @@ int main(int argc, char* args[])
 
 				case 21:
 					//icon render
-					wood_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
-					stone_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
-					iron_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
-					gem_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
+					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
+					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
+					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
+					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.lavaTowerCost);
@@ -767,10 +778,10 @@ int main(int argc, char* args[])
 
 				case 12:
 					//icon render
-					wood_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
-					stone_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
-					iron_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
-					gem_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
+					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
+					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
+					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
+					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.magicTowerCost);
@@ -782,10 +793,10 @@ int main(int argc, char* args[])
 
 				case 14:
 					//icon render
-					wood_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
-					stone_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
-					iron_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
-					gem_icon.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
+					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
+					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
+					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
+					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					//cost render
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.damageUpgradeCost);
@@ -827,7 +838,7 @@ int main(int argc, char* args[])
 				// Render path for enemies
 				for (std::tuple<int, int> pos : gameState.enemyPath)
 				{
-					stoneRoad.render((std::get<0>(pos) * gameState.m_TILE_SIDE_LENGTH), (std::get<1>(pos) * gameState.m_TILE_SIDE_LENGTH), gameState);
+					stoneRoadTexture.render((std::get<0>(pos) * gameState.m_TILE_SIDE_LENGTH), (std::get<1>(pos) * gameState.m_TILE_SIDE_LENGTH), gameState);
 					buildingTiles[std::get<0>(pos)][std::get<1>(pos)].hasBuilding = true;
 				}
 
@@ -860,7 +871,7 @@ int main(int argc, char* args[])
 
 
 				//heartLocation render
-				heart.render((std::get<0>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), (std::get<1>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), gameState);
+				heartRoadTexture.render((std::get<0>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), (std::get<1>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), gameState);
 
 				//heartLocation check if enemy reached
 				for (Enemy &enemy : enemies)

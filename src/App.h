@@ -11,21 +11,16 @@
 #include <vector>
 
 
-//Starts up SDL and creates window
+// Start up SDL and create window
 bool init(GameState& gameState);
 
-//Loads media
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelection, Texture& selectionTile, Texture& enemyTexture, Texture& gem_icon, Texture& iron_icon, Texture& stone_icon, Texture& goblinTexture, Texture& knightTexture, Texture& smallGoblinTexture, Texture& towerBaseArrow, Texture& towerBaseLava, Texture& towerBaseMagic, Texture& stoneRoad, Texture& protagonist, Texture& towersText, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heart_icon, Texture& assasinTexture);
+// Load media (textures, fonts)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblinTexture, Texture& knightTexture, Texture& smallGoblinTexture, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture);
 
-////Frees media and shuts down SDL
-//void close();
-
-//Loads individual image
-//SDL_Texture* loadTexture(std::string path, GameState& gameState);
-
-//Fill up a vector with the pixel coordinates of images which will act as game floor tiles
+// Fill up a vector with the pixel coordinates of images which will act as game floor tiles
 bool generateViewportTiles(std::vector<SDL_Rect>& viewports, GameState& gameState);
 
+// 
 bool generateTiles(std::vector<std::vector<Tile>>& tiles, GameState& gameState);
 
 #endif // !APP_H
