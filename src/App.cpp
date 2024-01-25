@@ -90,7 +90,7 @@ bool init(GameState& gameState)
 // Therefore, the loadMedia() function has over 20 arguments with the texture names
 // They could be stored in an std::array or C-style array, but our soultion is (arguably) more readable
 //  - the textures are referred to by their variable names instead of indexed array elements 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSwordTexture, Texture& woodIconTexture, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture,Texture& instructionBackgroundTexture ,Texture& ATexture, Texture& ARROWDOWNTexture, Texture& ARROWLEFTTexture, Texture& ARROWRIGHTTexture, Texture& ARROWUPTexture, Texture& DTexture, Texture& RTexture, Texture& STexture, Texture& SPACETexture, Texture& WTexture)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSwordTexture, Texture& woodIconTexture, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture, Texture& menuTexture, Texture& victoryScreen, Texture& failureScreen)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -254,69 +254,21 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
-	if (!instructionBackgroundTexture.loadFromFile(gameState.m_textureFilenames[26], gameState))
+	if (!menuTexture.loadFromFile(gameState.m_textureFilenames[26], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[26] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!ATexture.loadFromFile(gameState.m_textureFilenames[27], gameState))
+	if (!victoryScreen.loadFromFile(gameState.m_textureFilenames[27], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[27] << "!\n";
 		successfullyLoaded = false;
 	}
 
-	if (!ARROWDOWNTexture.loadFromFile(gameState.m_textureFilenames[28], gameState))
+	if (!failureScreen.loadFromFile(gameState.m_textureFilenames[28], gameState))
 	{
 		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[28] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!ARROWLEFTTexture.loadFromFile(gameState.m_textureFilenames[29], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[29] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!ARROWRIGHTTexture.loadFromFile(gameState.m_textureFilenames[30], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[30] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!ARROWUPTexture.loadFromFile(gameState.m_textureFilenames[31], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[31] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!DTexture.loadFromFile(gameState.m_textureFilenames[32], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[32] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!RTexture.loadFromFile(gameState.m_textureFilenames[33], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[33] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!STexture.loadFromFile(gameState.m_textureFilenames[34], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[34] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!SPACETexture.loadFromFile(gameState.m_textureFilenames[35], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[35] << "!\n";
-		successfullyLoaded = false;
-	}
-
-	if (!WTexture.loadFromFile(gameState.m_textureFilenames[36], gameState))
-	{
-		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[36] << "!\n";
 		successfullyLoaded = false;
 	}
 
@@ -429,18 +381,10 @@ int main(int argc, char* args[])
 		Texture towerTexture{};
 		Texture enemyTexture{};
 
-		// Instruction textures
-		Texture instructionBackgroundTexture{};
-		Texture ATexture{};
-		Texture ARROWDOWNTexture{};
-		Texture ARROWLEFTTexture{};
-		Texture ARROWRIGHTTexture{};
-		Texture ARROWUPTexture{};
-		Texture DTexture{};
-		Texture RTexture{};
-		Texture STexture{};
-		Texture SPACETexture{};
-		Texture WTexture{};
+		// Instruction & menu textures 
+		Texture menuTexture{};
+		Texture victoryScreen{};
+		Texture failureScreen{};
 		
 		// Selection UI textures
 		Texture panelSelectionTexture{};
@@ -570,7 +514,7 @@ int main(int argc, char* args[])
 		generateSelectionTiles(selections, gameState);
 
 		// Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelectionTexture, selectionTile, enemyTexture, gemIconTexture, ironIconTexture, stoneIconTexture, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrowTexture, towerBaseLavaTexture, towerBaseMagicTexture, stoneRoadTexture, protagonistTexture, towersText, uprgadesText, upgradeSwordTexture, woodIconTexture, bottomTexture, rightTexture, heartRoadTexture, heartIconTexture, assasinTexture, instructionBackgroundTexture, ATexture, ARROWDOWNTexture, ARROWLEFTTexture, ARROWRIGHTTexture, ARROWUPTexture, DTexture, RTexture, STexture, SPACETexture, WTexture))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelectionTexture, selectionTile, enemyTexture, gemIconTexture, ironIconTexture, stoneIconTexture, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrowTexture, towerBaseLavaTexture, towerBaseMagicTexture, stoneRoadTexture, protagonistTexture, towersText, uprgadesText, upgradeSwordTexture, woodIconTexture, bottomTexture, rightTexture, heartRoadTexture, heartIconTexture, assasinTexture, menuTexture, victoryScreen, failureScreen))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -600,7 +544,7 @@ int main(int argc, char* args[])
 				SDL_RenderClear(gameState.m_Renderer);
 
 				// Put menu displaying components here
-				protagonistTexture.render(0, 0, gameState);
+				menuTexture.render(0, 0, gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
