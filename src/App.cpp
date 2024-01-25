@@ -398,7 +398,7 @@ int main(int argc, char* args[])
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
-			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), ((gameState.m_SCREEN_HEIGHT_TILE_COUNT - 1) * gameState.m_TILE_SIDE_LENGTH), 20, 2 * i + 2));
+			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2));
 		}
 
 		// Create the vector containing placed towers
