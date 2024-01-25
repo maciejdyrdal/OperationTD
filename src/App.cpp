@@ -401,6 +401,12 @@ int main(int argc, char* args[])
 		// Initialize the texture pointers for the player character, enemies and towers
 		Texture* characterTexturePtr{ &characterTexture };
 		Texture* enemyTexturePtr{ &enemyTexture };
+		Texture* protagonistPtr{ &protagonist };
+
+		Texture* assasinTexturePtr{ &assasinTexture };
+		Texture* goblinTexturePtr{ &goblinTexture };
+		Texture* smallGoblinTexturePtr{ &smallGoblinTexture };
+		Texture* knightTexturePtr{ &knightTexture };
 
 
 		Texture* panelSelectionPtr{ &panelSelection };
@@ -411,13 +417,21 @@ int main(int argc, char* args[])
 
 
 		// Create the player object
-		Player player{ characterTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
+		Player player{ protagonistPtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		// Create the vector containing enemies
+		
+		//assasinTexturePtr
+		//goblinTexturePtr
+		//smallGoblinTexturePtr
+		//knightTexturePtr
+
+
+
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
-			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
+			enemies.push_back(Enemy(smallGoblinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
 		}
 
 		// Create the vector containing placed towers
@@ -877,8 +891,7 @@ int main(int argc, char* args[])
 					}
 				}
 
-				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
-				player.playerTexture->render(player.xPos, player.yPos, gameState);
+				
 
 				//selection render
 				select.playerTexture->render(select.xPos, select.yPos, gameState);
@@ -918,8 +931,14 @@ int main(int argc, char* args[])
 				heartTextTexture.render(80 + 450, gameState.m_SCREEN_HEIGHT + 10, gameState);
 
 
+				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
+				player.playerTexture->render(player.xPos, player.yPos, gameState);
+
+
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
+
+
 			}
 		}
 	}
