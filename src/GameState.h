@@ -48,7 +48,19 @@ public:
 
 	// In memory text stream
 	std::stringstream m_TimeText;
+
 	std::stringstream s_WoodAmountText;
+	std::stringstream s_StoneAmountText;
+	std::stringstream s_IronAmountText;
+	std::stringstream s_GemAmountText;
+
+	std::stringstream s_HealthAmountText;
+
+
+	std::stringstream s_WoodCostAmountText;
+	std::stringstream s_StoneCostAmountText;
+	std::stringstream s_IronCostAmountText;
+	std::stringstream s_GemCostAmountText;
 
 	// Array containing the filenames of textures to be loaded
 	const std::array<std::string, 25> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png", "img/stoneRoad.png", "img/protagonist.png", "img/towersText.png", "img/upgradesText.png", "img/upgradeSword.png", "img/wood_icon.png", "img/bottomTexture.png", "img/rightTexture.png", "img/heart.png", "img/heart_icon.png"};
@@ -61,15 +73,19 @@ public:
 	int ironAmount = 50;
 
 	// Resource costs of each tower
-	std::tuple<int, int, int, int> arrowTowerCost{ 200, 50, 0, 20 };
-	std::tuple<int, int, int, int> lavaTowerCost{ 100, 200, 20, 100 };
-	std::tuple<int, int, int, int> magicTowerCost{ 100, 100, 100, 100 };
+	std::tuple<int, int, int, int> arrowTowerCost{ 200, 100, 0, 0 };
+	std::tuple<int, int, int, int> lavaTowerCost{ 100, 200, 100, 0 };
+	std::tuple<int, int, int, int> magicTowerCost{ 200, 100, 100, 100 };
+
+	// Resource costs of each upgrade
+	std::tuple<int, int, int, int> damageUpgradeCost{ 50, 50, 100, 50 };
+
 
 	// Hit points which get reduces whenever an enemy reaches the end tile; lowering this value to 0 means the player has lost the game
 	int health = 10;
 
 	// Predetermined path for enemies to follow
-	std::vector<std::tuple<int, int>> enemyPath{ {14, 5}, {13, 5}, {12, 5}, {12, 4}, {12, 3}, {11, 3}, {10, 3}, {10, 4}, {10, 5}, {10, 6}, {10, 7} };
+	std::vector<std::tuple<int, int>> enemyPath{ {14, 5}, {13, 5}, {12, 5}, {12, 4}, {12, 3}, {11, 3}, {10, 3}, {10, 4}, {10, 5}, {10, 6}, {10, 7}, {9,7}, {8,7}, {8,6}, {8,5}, {8,4}, {8,3}, {8,2}, {7,2}, {6,2}, {5,2}, {4,2}, {3,2}, {3,3}, {3,4}, {3,5}, {3,6}, {4,6}, {5,6}, {5,7}, {5,8}, {4,8}, {3,8}, {2,8}, {1,8}, {0,8} };
 	
 	// Separate variable which stores the location of the end tile
 	std::tuple<int, int> heartLocation{ std::get<0>(enemyPath[enemyPath.size()-1]),  std::get<1>(enemyPath[enemyPath.size() - 1]) };
