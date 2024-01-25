@@ -407,7 +407,7 @@ int main(int argc, char* args[])
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
-			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2));
+			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
 		}
 
 		// Create the vector containing placed towers
@@ -616,8 +616,8 @@ int main(int argc, char* args[])
 				}
 
 				//Set text to be rendered
-				//gameState.m_TimeText.str("");
-				//gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
+				gameState.m_TimeText.str("");
+				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
 
 				gameState.s_WoodAmountText.str("");
 				gameState.s_WoodAmountText << gameState.woodAmount;
@@ -918,6 +918,7 @@ int main(int argc, char* args[])
 				for (std::tuple<int, int> pos : gameState.enemyPath)
 				{
 					stoneRoad.render((std::get<0>(pos) * gameState.m_TILE_SIDE_LENGTH), (std::get<1>(pos) * gameState.m_TILE_SIDE_LENGTH), gameState);
+					buildingTiles[std::get<0>(pos)][std::get<1>(pos)].hasBuilding = true;
 				}
 
 
