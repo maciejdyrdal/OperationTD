@@ -7,7 +7,7 @@
 
 Texture::Texture()
 {
-    //Initialize
+    // Initialize
     mTexture = NULL;
     mWidth = 0;
     mHeight = 0;
@@ -15,19 +15,19 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-    //Deallocate
+    // Deallocate
     free();
 }
 
 bool Texture::loadFromFile(const std::string& path, GameState& gameState)
 {
-    //Get rid of preexisting texture
+    // Get rid of preexisting texture
     free();
 
-    //The final texture
+    // The final texture
     SDL_Texture* newTexture = NULL;
 
-    //Load image at specified path
+    // Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(path.c_str());
     if (loadedSurface == NULL)
     {
@@ -35,9 +35,7 @@ bool Texture::loadFromFile(const std::string& path, GameState& gameState)
     }
     else
     {
-        ////Color key image
-        //SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
-        //Create texture from surface pixels
+        // Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(gameState.m_Renderer, loadedSurface);
         if (newTexture == NULL)
         {
@@ -45,26 +43,26 @@ bool Texture::loadFromFile(const std::string& path, GameState& gameState)
         }
         else
         {
-            //Get image dimensions
+            // Get image dimensions
             mWidth = loadedSurface->w;
             mHeight = loadedSurface->h;
         }
 
-        //Get rid of old loaded surface
+        // Get rid of old loaded surface
         SDL_FreeSurface(loadedSurface);
     }
 
-    //Return success
+    // Return success
     mTexture = newTexture;
     return mTexture != NULL;
 }
 
 bool Texture::loadFromRenderedText(std::string textureText, SDL_Color textColor, GameState& gameState)
 {
-    //Get rid of preexisting texture
+    // Get rid of preexisting texture
     free();
 
-    //Render text surface
+    // Render text surface
     SDL_Surface* textSurface = TTF_RenderText_Solid(gameState.m_Font, textureText.c_str(), textColor);
     if (textSurface == NULL)
     {
@@ -72,7 +70,7 @@ bool Texture::loadFromRenderedText(std::string textureText, SDL_Color textColor,
     }
     else
     {
-        //Create texture from surface pixels
+        // Create texture from surface pixels
         mTexture = SDL_CreateTextureFromSurface(gameState.m_Renderer, textSurface);
         if (mTexture == NULL)
         {
@@ -80,23 +78,23 @@ bool Texture::loadFromRenderedText(std::string textureText, SDL_Color textColor,
         }
         else
         {
-            //Get image dimensions
+            // Get image dimensions
             mWidth = textSurface->w;
             mHeight = textSurface->h;
         }
 
-        //Get rid of old surface
+        // Get rid of old surface
         SDL_FreeSurface(textSurface);
     }
 
-    //Return success
+    // Return success
     return mTexture != NULL;
 }
 
 
 void Texture::free()
 {
-    //Free texture if it exists
+    // Free texture if it exists
     if (mTexture != NULL)
     {
         SDL_DestroyTexture(mTexture);
@@ -108,7 +106,7 @@ void Texture::free()
 
 void Texture::render(int x, int y, GameState& gameState)
 {
-    //Set rendering space and render to screen
+    // Set rendering space and render to screen
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
 
     SDL_RenderCopy(gameState.m_Renderer, mTexture, NULL, &renderQuad);

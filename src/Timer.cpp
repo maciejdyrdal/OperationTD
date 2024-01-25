@@ -4,7 +4,7 @@
 
 Timer::Timer()
 {
-    //Initialize the variables
+    // Initialize the variables
     mStartTicks = 0;
     mPausedTicks = 0;
 
@@ -14,39 +14,39 @@ Timer::Timer()
 
 void Timer::start()
 {
-    //Start the timer
+    // Start the timer
     mStarted = true;
 
-    //Unpause the timer
+    // Unpause the timer
     mPaused = false;
 
-    //Get the current clock time
+    // Get the current clock time
     mStartTicks = SDL_GetTicks();
     mPausedTicks = 0;
 }
 
 void Timer::stop()
 {
-    //Stop the timer
+    // Stop the timer
     mStarted = false;
 
-    //Unpause the timer
+    // Unpause the timer
     mPaused = false;
 
-    //Clear tick variables
+    // Clear tick variables
     mStartTicks = 0;
     mPausedTicks = 0;
 }
 
 void Timer::pause()
 {
-    //If the timer is running and isn't already paused
+    // If the timer is running and isn't already paused
     if (mStarted && !mPaused)
     {
-        //Pause the timer
+        // Pause the timer
         mPaused = true;
 
-        //Calculate the paused ticks
+        // Calculate the paused ticks
         mPausedTicks = SDL_GetTicks() - mStartTicks;
         mStartTicks = 0;
     }
@@ -54,37 +54,37 @@ void Timer::pause()
 
 void Timer::unpause()
 {
-    //If the timer is running and paused
+    // If the timer is running and paused
     if (mStarted && mPaused)
     {
-        //Unpause the timer
+        // Unpause the timer
         mPaused = false;
 
-        //Reset the starting ticks
+        // Reset the starting ticks
         mStartTicks = SDL_GetTicks() - mPausedTicks;
 
-        //Reset the paused ticks
+        // Reset the paused ticks
         mPausedTicks = 0;
     }
 }
 
 int Timer::getTicks()
 {
-    //The actual timer time
+    // The actual timer time
     int time = 0;
 
-    //If the timer is running
+    // If the timer is running
     if (mStarted)
     {
-        //If the timer is paused
+        // If the timer is paused
         if (mPaused)
         {
-            //Return the number of ticks when the timer was paused
+            // Return the number of ticks when the timer was paused
             time = mPausedTicks;
         }
         else
         {
-            //Return the current time minus the start time
+            // Return the current time minus the start time
             time = SDL_GetTicks() - mStartTicks;
         }
     }
@@ -94,13 +94,13 @@ int Timer::getTicks()
 
 bool Timer::isStarted()
 {
-    //Timer is running and paused or unpaused
+    // Timer is running and paused or unpaused
     return mStarted;
 }
 
 bool Timer::isPaused()
 {
-    //Timer is running and paused
+    // Timer is running and paused
     return mPaused && mStarted;
 }
 

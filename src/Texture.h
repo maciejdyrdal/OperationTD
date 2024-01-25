@@ -7,37 +7,35 @@
 
 class GameState;
 
-//Texture wrapper class
+// SDL Texture wrapper class
 class Texture
 {
 public:
-    //Initializes variables
     Texture();
 
-    //Deallocates memory
     ~Texture();
 
-    //Loads image at specified path
+    // Load image at specified path
     bool loadFromFile(const std::string& path, GameState& gameState);
 
-    //Creates image from font string
+    // Create image from font string
     bool loadFromRenderedText(std::string textureText, SDL_Color textColor, GameState& gameState);
 
-    //Deallocates texture
+    // Deallocate texture
     void free();
 
-    //Renders texture at given point
+    // Render texture at given point
     void render(int x, int y, GameState& gameState);
 
-    //Gets image dimensions
+    // Get image dimensions
     int getWidth();
     int getHeight();
 
 private:
-    //The actual hardware texture
+    // The actual hardware texture
     SDL_Texture* mTexture;
 
-    //Image dimensions
+    // Image dimensions
     int mWidth;
     int mHeight;
 };

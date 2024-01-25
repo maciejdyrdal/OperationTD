@@ -3,7 +3,7 @@
 
 #include "Texture.h"
 
-
+// Class containing information on a game tile 
 class Tile
 {
 public:

@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "GameState.h"
 
+// Tower class containing its texture, position, damage radius, damage per second and number of attacks performed each second
 class Tower
 {
 public:
@@ -21,6 +22,7 @@ public:
 	int dps;
 	int attacksPerSec;
 
+	// Deal damage to enemy if in range and return its hp afterwards
 	int dealDamage(Enemy& enemy, GameState& gameState);
 };
 

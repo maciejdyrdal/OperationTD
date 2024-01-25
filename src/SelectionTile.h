@@ -4,11 +4,11 @@
 
 #include "Texture.h"
 
+// Class containing information on a tile in the selection menu
 class SelectionTile
 {
 public:
 	Texture* selectionTileTexture;
-
 
 	int xPos;
 	int yPos;

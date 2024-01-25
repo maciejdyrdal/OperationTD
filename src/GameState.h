@@ -46,17 +46,16 @@ public:
 	// The application timer
 	Timer m_Timer;
 
-	// In memory text stream
-	std::stringstream m_TimeText;
+	// In memory text streams
 
+	// Resource count text streams
 	std::stringstream s_WoodAmountText;
 	std::stringstream s_StoneAmountText;
 	std::stringstream s_IronAmountText;
 	std::stringstream s_GemAmountText;
-
 	std::stringstream s_HealthAmountText;
 
-
+	// Resource cost text streams
 	std::stringstream s_WoodCostAmountText;
 	std::stringstream s_StoneCostAmountText;
 	std::stringstream s_IronCostAmountText;
@@ -70,23 +69,12 @@ public:
 	int goblinCount{ 10 };
 	int knightCount{ 5 };
 	int assassinCount{ 10 };
-	//int enemyCount{ 5 };
 	
 	// Starting amounts of building resources 
-	
 	int woodAmount = 5;
 	int stoneAmount = 5;
 	int ironAmount = 3;
 	int gemAmount = 0;
-	
-	
-	//for testing
-	/*
-	int woodAmount = 999;
-	int stoneAmount = 999;
-	int ironAmount = 999;
-	int gemAmount = 999;
-	*/
 
 	// Resource costs of each tower
 	std::tuple<int, int, int, int> arrowTowerCost{ 3, 1, 0, 0 };
@@ -95,7 +83,6 @@ public:
 
 	// Resource costs of each upgrade
 	std::tuple<int, int, int, int> damageUpgradeCost{ 1, 1, 3, 5 };
-
 
 	// Hit points which get reduced whenever an enemy reaches the end tile; lowering this value to 0 means the player has lost the game
 	int health = 10;
