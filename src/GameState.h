@@ -67,18 +67,28 @@ public:
 	int enemyCount{ 5 };
 	
 	// Starting amounts of building resources 
-	int woodAmount = 300;
-	int stoneAmount = 150;
-	int gemAmount = 90;
-	int ironAmount = 50;
+	
+	int woodAmount = 5;
+	int stoneAmount = 5;
+	int ironAmount = 3;
+	int gemAmount = 0;
+	
+	
+	//for testing
+	/*
+	int woodAmount = 999;
+	int stoneAmount = 999;
+	int ironAmount = 999;
+	int gemAmount = 999;
+	*/
 
 	// Resource costs of each tower
-	std::tuple<int, int, int, int> arrowTowerCost{ 200, 100, 0, 0 };
-	std::tuple<int, int, int, int> lavaTowerCost{ 100, 200, 100, 0 };
-	std::tuple<int, int, int, int> magicTowerCost{ 200, 100, 100, 100 };
+	std::tuple<int, int, int, int> arrowTowerCost{ 3, 1, 0, 0 };
+	std::tuple<int, int, int, int> lavaTowerCost{ 2, 5, 3, 0 };
+	std::tuple<int, int, int, int> magicTowerCost{ 2, 2, 1, 5 };
 
 	// Resource costs of each upgrade
-	std::tuple<int, int, int, int> damageUpgradeCost{ 50, 50, 100, 50 };
+	std::tuple<int, int, int, int> damageUpgradeCost{ 1, 1, 3, 5 };
 
 
 	// Hit points which get reduces whenever an enemy reaches the end tile; lowering this value to 0 means the player has lost the game
