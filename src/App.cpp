@@ -415,6 +415,17 @@ int main(int argc, char* args[])
 		Texture* protagonistTexturePtr{ &protagonistTexture };
 		Texture* enemyTexturePtr{ &enemyTexture };
 
+		Texture* assasinTexturePtr{ &assasinTexture };
+		Texture* goblinTexturePtr{ &goblinTexture };
+		Texture* smallGoblinTexturePtr{ &smallGoblinTexture };
+		Texture* knightTexturePtr{ &knightTexture };
+
+
+		Texture* panelSelectionPtr{ &panelSelectionTexture };
+		Texture* towerBaseArrowPtr{ &towerBaseArrowTexture };
+		Texture* towerBaseLavaPtr{ &towerBaseLavaTexture };
+		Texture* towerBaseMagicPtr{ &towerBaseMagicTexture };
+
 		Texture* panelSelectionTexturePtr{ &panelSelectionTexture };
 		Texture* towerBaseArrowTexturePtr{ &towerBaseArrowTexture };
 		Texture* towerBaseLavaTexturePtr{ &towerBaseLavaTexture };
@@ -425,11 +436,18 @@ int main(int argc, char* args[])
 		Player player{ protagonistTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
 		// Create the vector containing enemies
+		
+		//assasinTexturePtr
+		//goblinTexturePtr
+		//smallGoblinTexturePtr
+		//knightTexturePtr
+
+
+
 		std::vector<Enemy> enemies;
 		for (int i{ 0 }; i < gameState.enemyCount; ++i)
 		{
-
-			enemies.push_back(Enemy(enemyTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
+			enemies.push_back(Enemy(smallGoblinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
 		}
 
 		// Create the vector containing placed towers
@@ -888,8 +906,7 @@ int main(int argc, char* args[])
 					}
 				}
 
-				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
-				player.playerTexture->render(player.xPos, player.yPos, gameState);
+				
 
 				//selection render
 				select.playerTexture->render(select.xPos, select.yPos, gameState);
@@ -929,8 +946,14 @@ int main(int argc, char* args[])
 				heartTextTexture.render(80 + 450, gameState.m_SCREEN_HEIGHT + 10, gameState);
 
 
+				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
+				player.playerTexture->render(player.xPos, player.yPos, gameState);
+
+
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
+
+
 			}
 		}
 	}
