@@ -22,6 +22,7 @@
 #include <tuple>
 
 
+// Start up SDL and initialize all game components (window, renderer etc)
 bool init(GameState& gameState)
 {
 	// Initialization flag
@@ -89,7 +90,6 @@ bool init(GameState& gameState)
 // Therefore, the loadMedia() function has over 20 arguments with the texture names
 // They could be stored in an std::array or C-style array, but our soultion is (arguably) more readable
 //  - the textures are referred to by their variable names instead of indexed array elements 
-// Lord have mercy upon us
 bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSwordTexture, Texture& woodIconTexture, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture)
 {
 	//Loading success flag
@@ -412,20 +412,23 @@ int main(int argc, char* args[])
 
 
 		// Initialize the texture pointers for the player character, enemies and towers
+		
+		// Player
 		Texture* protagonistTexturePtr{ &protagonistTexture };
-		Texture* enemyTexturePtr{ &enemyTexture };
 
-		Texture* assasinTexturePtr{ &assasinTexture };
+		// Enemies
+		Texture* assassinTexturePtr{ &assasinTexture };
 		Texture* goblinTexturePtr{ &goblinTexture };
 		Texture* smallGoblinTexturePtr{ &smallGoblinTexture };
 		Texture* knightTexturePtr{ &knightTexture };
 
-
-		Texture* panelSelectionPtr{ &panelSelectionTexture };
+		// Towers
 		Texture* towerBaseArrowPtr{ &towerBaseArrowTexture };
 		Texture* towerBaseLavaPtr{ &towerBaseLavaTexture };
 		Texture* towerBaseMagicPtr{ &towerBaseMagicTexture };
 
+		// Selection panel
+		Texture* panelSelectionPtr{ &panelSelectionTexture };
 		Texture* panelSelectionTexturePtr{ &panelSelectionTexture };
 		Texture* towerBaseArrowTexturePtr{ &towerBaseArrowTexture };
 		Texture* towerBaseLavaTexturePtr{ &towerBaseLavaTexture };
@@ -435,42 +438,59 @@ int main(int argc, char* args[])
 		// Create the player object
 		Player player{ protagonistTexturePtr, gameState.m_TILE_SIDE_LENGTH * 3, gameState.m_TILE_SIDE_LENGTH * 4 };
 
-		// Create the vector containing enemies
-		
+		// Create the selector object
+		Player select{ panelSelectionTexturePtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
+
 		//assasinTexturePtr
 		//goblinTexturePtr
 		//smallGoblinTexturePtr
 		//knightTexturePtr
 
-
-
+		// Create the vector containing enemies and fill it with different types of enemies to be spawned
 		std::vector<Enemy> enemies;
-		for (int i{ 0 }; i < gameState.enemyCount; ++i)
+
+		// First part of small goblins
+		for (int i{ 0 }; i < gameState.smallGoblinCount / 2; ++i)
 		{
-			enemies.push_back(Enemy(smallGoblinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 2));
+			enemies.push_back(Enemy(smallGoblinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 2, 1));
+		}
+
+		// Goblins
+		for (int i{ 0 }; i < gameState.goblinCount; ++i)
+		{
+			enemies.push_back(Enemy(goblinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 100, 5 * i + 40, 3));
+		}
+
+		// Assassins
+		for (int i{ 0 }; i < gameState.assassinCount; ++i)
+		{
+			enemies.push_back(Enemy(assassinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 40, 3 * i + 70, 2));
+		}
+
+		// Second part of small goblins
+		for (int i{ 0 }; i < gameState.smallGoblinCount / 2; ++i)
+		{
+			enemies.push_back(Enemy(smallGoblinTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 20, 2 * i + 100, 1));
+		}
+
+		// Knights
+		for (int i{ 0 }; i < gameState.knightCount; ++i)
+		{
+			enemies.push_back(Enemy(knightTexturePtr, ((gameState.m_SCREEN_WIDTH_TILE_COUNT + 10) * gameState.m_TILE_SIDE_LENGTH), 0, 70, 4 * i + 100, 3));
 		}
 
 		// Create the vector containing placed towers
 		std::vector<Tower> towers;
 
-
-		// Create tower object templates
-		//Tower tempArrowTower{ towerBaseArrowTexturePtr, 0, 0, 3, 2, 3 };
-		//Tower tempLavaTower{ towerBaseLavaTexturePtr, 0, 0, 1, 10, 8 };
-		//Tower tempMagicTower{ towerBaseMagicTexturePtr, 0, 0, 2, 5, 5 };
-
-
-		//Player select{ panelSelectionTexturePtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH, 0 };
-		Player select{ panelSelectionTexturePtr, gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT,  gameState.s_PANEL_TILE_SIDE_LENGTH };
-
+		// Create and fill up a vector with building tiles which stores information on whether a tile contains a building
 		std::vector<std::vector<Tile>> buildingTiles{};
 		generateTiles(buildingTiles, gameState);
 
-		//selection vector
+		// Create and fill up a vector containing the selection panel tiles
 		std::vector<std::vector<SelectionTile>> selections{};
 		generateSelectionTiles(selections, gameState);
 
-		//Load media
+		// Load media
 		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelectionTexture, selectionTile, enemyTexture, gemIconTexture, ironIconTexture, stoneIconTexture, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrowTexture, towerBaseLavaTexture, towerBaseMagicTexture, stoneRoadTexture, protagonistTexture, towersText, uprgadesText, upgradeSwordTexture, woodIconTexture, bottomTexture, rightTexture, heartRoadTexture, heartIconTexture, assasinTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
@@ -480,36 +500,38 @@ int main(int argc, char* args[])
 			// Main loop flag
 			bool quit{ false };
 
-			//Event handler
+			// Event handler
 			SDL_Event e;
 
-			//Set text color as white
+			// Set text color as white
 			SDL_Color textColor = { 255, 255, 255, 255 };
 
+			// Start the in-game timer which guides enemy movement
 			gameState.m_Timer.start();
 
-			int attacksMade{ 0 };
+			// Variable which holds the current second since the beginning; this determines whether towers are fine to attack (because they do so only once per second)
+			int currentSecond{ 0 };
 
-			//While application is running
+			// Main game loop
 			while (!quit)
 			{
-				//Handle events on queue
+				// Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
-					//User requests quit
+					// User requests quit
 					if (e.type == SDL_QUIT)
 					{
 						quit = true;
 					}
+					// User presses a key
 					else if (e.type == SDL_KEYDOWN)
 					{
 						int xPosTemp{ player.xPos };
 						int yPosTemp{ player.yPos };
 
-
 						switch (e.key.keysym.sym)
 						{
-						//protagonist movement & actions
+						// Handle player movement and actions
 						case SDLK_w:
 							player.yPos = std::max(player.yPos - gameState.m_TILE_SIDE_LENGTH, 0);
 							break;
@@ -534,21 +556,24 @@ int main(int argc, char* args[])
 							buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;*/
 							break;
 
-						//selection "movement" & action
+						// Handle selector "movement" and action
 						case SDLK_UP:
-							if (select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH == 3 * gameState.s_PANEL_TILE_SIDE_LENGTH) {
+							if (select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH == 3 * gameState.s_PANEL_TILE_SIDE_LENGTH)
+							{
 								select.yPos = select.yPos - 2 * gameState.s_PANEL_TILE_SIDE_LENGTH;
 							}
-							else {
+							else 
+							{
 								select.yPos = std::max(select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH);
-
 							}
 							break;
 						case SDLK_DOWN:
-							if (select.yPos + gameState.s_PANEL_TILE_SIDE_LENGTH == 3 * gameState.s_PANEL_TILE_SIDE_LENGTH) {
+							if (select.yPos + gameState.s_PANEL_TILE_SIDE_LENGTH == 3 * gameState.s_PANEL_TILE_SIDE_LENGTH) 
+							{
 								select.yPos = select.yPos + 2 * gameState.s_PANEL_TILE_SIDE_LENGTH;
 							}
-							else {
+							else 
+							{
 								select.yPos = std::min(select.yPos + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_SCREEN_PANEL_HEIGHT - gameState.s_PANEL_TILE_SIDE_LENGTH);
 							}
 							break;
@@ -558,8 +583,7 @@ int main(int argc, char* args[])
 						case SDLK_RIGHT:
 							select.xPos = std::min(select.xPos + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.m_SCREEN_WIDTH + gameState.s_SCREEN_PANEL_WIDTH - gameState.s_PANEL_TILE_SIDE_LENGTH);
 							break;
-						//action
-						
+						// Handle tower placement
 						case SDLK_r:
 							// A roundabout method of checking the location of the selector and choosing the appropriate tower to place
 							int tempX = (select.xPos - gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT)/64 + 1;
@@ -618,46 +642,40 @@ int main(int argc, char* args[])
 								break;
 							}
 							case 14:
-								//upg sword
-								PLOG_INFO << "UPGRADE COMPLETED";
+								// Upgrage player sword
+								std::cout << "UPGRADE COMPLETED" << '\n';
 								break;
-
 							}
 						}
 
-
-
-						//Start/stop
-						if (e.key.keysym.sym == SDLK_o)
-						{
-							if (gameState.m_Timer.isStarted())
-							{
-								gameState.m_Timer.stop();
-							}
-							else
-							{
-								gameState.m_Timer.start();
-							}
-						}
-						//Pause/unpause
-						else if (e.key.keysym.sym == SDLK_p)
-						{
-							if (gameState.m_Timer.isPaused())
-							{
-								gameState.m_Timer.unpause();
-							}
-							else
-							{
-								gameState.m_Timer.pause();
-							}
-						}
+						////Start/stop
+						//if (e.key.keysym.sym == SDLK_o)
+						//{
+						//	if (gameState.m_Timer.isStarted())
+						//	{
+						//		gameState.m_Timer.stop();
+						//	}
+						//	else
+						//	{
+						//		gameState.m_Timer.start();
+						//	}
+						//}
+						////Pause/unpause
+						//else if (e.key.keysym.sym == SDLK_p)
+						//{
+						//	if (gameState.m_Timer.isPaused())
+						//	{
+						//		gameState.m_Timer.unpause();
+						//	}
+						//	else
+						//	{
+						//		gameState.m_Timer.pause();
+						//	}
+						//}
 					}
 				}
 
-				//Set text to be rendered
-				gameState.m_TimeText.str("");
-				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
-
+				// Set text to be rendered
 				gameState.s_WoodAmountText.str("");
 				gameState.s_WoodAmountText << gameState.woodAmount;
 
@@ -675,12 +693,7 @@ int main(int argc, char* args[])
 
 
 
-				//Render text
-				if (!timeTextTexture.loadFromRenderedText(gameState.m_TimeText.str().c_str(), textColor, gameState))
-				{
-					PLOG_ERROR << "Unable to render time texture!\n";
-				}
-
+				// Render text
 				if (!woodTextTexture.loadFromRenderedText(gameState.s_WoodAmountText.str().c_str(), textColor, gameState))
 				{
 					PLOG_ERROR << "Unable to render time texture!\n";
@@ -707,11 +720,11 @@ int main(int argc, char* args[])
 				}
 				
 
-				//Clear screen
+				// Clear screen
 				SDL_SetRenderDrawColor(gameState.m_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gameState.m_Renderer);
 
-				//Create the viewport grid
+				// Create the viewport grid
 				std::vector<SDL_Rect> groundViewportTiles{};
 				generateViewportTiles(groundViewportTiles, gameState);
 
@@ -720,7 +733,7 @@ int main(int argc, char* args[])
 					groundTexture.render(viewport.x, viewport.y, gameState);
 				}
 
-				//Create Selection viewport grid
+				// Create the selection viewport grid
 				std::vector<SDL_Rect> selectionGroundViewportTiles{};
 				generateSelectionViewportTiles(selectionGroundViewportTiles, gameState);
 
@@ -728,31 +741,26 @@ int main(int argc, char* args[])
 				{
 					selectionTile.render(viewport.x, viewport.y, gameState);
 				}
-				//backgound rendering
+				// Render the background
 				rightTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 				bottomTexture.render(0, gameState.m_SCREEN_HEIGHT, gameState);
 				
-
-
-				//resources and health icon rendering
+				// Render resource and health icons
 				woodIconTexture.render(40, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5,gameState);
 				stoneIconTexture.render(40 + 100, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				ironIconTexture.render(40 + 200, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				gemIconTexture.render(40 + 300, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				heartIconTexture.render(40 + 450, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 
-				//selection panel rendering
+				//Render the selection panel 
 				towersText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 0, gameState);
 				uprgadesText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH * 3, gameState);
-
-
 				towerBaseArrowTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 				towerBaseLavaTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + gameState.s_PANEL_TILE_SIDE_LENGTH, gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 				towerBaseMagicTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 2 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
-
 				upgradeSwordTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 4 * gameState.s_PANEL_TILE_SIDE_LENGTH, gameState);
 
-				//selection cost rendering
+				//Render the selected tower cost
 				int tempX = (select.xPos - gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT) / 64 + 1;
 				int tempY = (select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH) / 64 + 1;
 
@@ -769,13 +777,13 @@ int main(int argc, char* args[])
 
 				switch (tempVar) {
 				case 11:
-					//icon render
+					// Render icon
 					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
 					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
 					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
 					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
-					//cost render
+					// Render cost
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.arrowTowerCost);
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.arrowTowerCost);
 					gameState.s_IronCostAmountText << std::get<2>(gameState.arrowTowerCost);
@@ -784,13 +792,13 @@ int main(int argc, char* args[])
 					break;
 
 				case 21:
-					//icon render
+					// Render icon
 					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
 					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
 					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
 					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
-					//cost render
+					// Render cost
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.lavaTowerCost);
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.lavaTowerCost);
 					gameState.s_IronCostAmountText << std::get<2>(gameState.lavaTowerCost);
@@ -799,13 +807,13 @@ int main(int argc, char* args[])
 					break;
 
 				case 12:
-					//icon render
+					// Render icon
 					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
 					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
 					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
 					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
-					//cost render
+					// Render cost
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.magicTowerCost);
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.magicTowerCost);
 					gameState.s_IronCostAmountText << std::get<2>(gameState.magicTowerCost);
@@ -814,22 +822,21 @@ int main(int argc, char* args[])
 					break;
 
 				case 14:
-					//icon render
+					// Render icon
 					woodIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 10, gameState);
 					stoneIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 40, gameState);
 					ironIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 70, gameState);
 					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
-					//cost render
+					// Render cost
 					gameState.s_WoodCostAmountText << std::get<0>(gameState.damageUpgradeCost);
 					gameState.s_StoneCostAmountText << std::get<1>(gameState.damageUpgradeCost);
 					gameState.s_IronCostAmountText << std::get<2>(gameState.damageUpgradeCost);
 					gameState.s_GemCostAmountText << std::get<3>(gameState.damageUpgradeCost);
 					
 					break;
-
-					
 				}
+
 				if (!woodCostAmountTexture.loadFromRenderedText(gameState.s_WoodCostAmountText.str().c_str(), textColor, gameState))
 				{
 					PLOG_ERROR << "Unable to render time texture!\n";
@@ -850,7 +857,6 @@ int main(int argc, char* args[])
 					PLOG_ERROR << "Unable to render time texture!\n";
 				}
 				
-
 				woodCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 13, gameState);
 				stoneCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 43, gameState);
 				ironCostAmountTexture.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT + 70, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 73, gameState);
@@ -864,7 +870,6 @@ int main(int argc, char* args[])
 					buildingTiles[std::get<0>(pos)][std::get<1>(pos)].hasBuilding = true;
 				}
 
-
 				// Render placed towers
 				for (Tower &tower : towers)
 				{
@@ -872,7 +877,7 @@ int main(int argc, char* args[])
 				}
 
 				// Deal damage with towers to enemies in range of them
-				if (attacksMade == (int)(gameState.m_Timer.getTicks() / 1000.f))
+				if (currentSecond == (int)(gameState.m_Timer.getTicks() / 1000.f))
 				{
 					for (Tower &tower : towers)
 					{
@@ -884,40 +889,34 @@ int main(int argc, char* args[])
 								tower.dealDamage(enemy, gameState);
 								++attacksMade;
 							}
-							std::cout << "Enemy's health is " << enemy.getHp() << '\n';
+							//std::cout << "Enemy's health is " << enemy.getHp() << '\n';
 						}
 					}
-					++attacksMade;
-					std::cout << '\n';
+					++currentSecond;
+					//std::cout << '\n';
 				}
 
-
-				//heartLocation render
+				// Render the final tile - the heart
 				heartRoadTexture.render((std::get<0>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), (std::get<1>(gameState.heartLocation)* gameState.m_TILE_SIDE_LENGTH), gameState);
 
-				//heartLocation check if enemy reached
+				// Check if an enemy has reached the heart and handle its death/deletion
 				for (Enemy &enemy : enemies)
 				{
-					if (enemy.xPos / 64 == std::get<0>(gameState.heartLocation) && enemy.yPos / 64 == std::get<1>(gameState.heartLocation) && !enemy.isDead) {
+					if (enemy.xPos / 64 == std::get<0>(gameState.heartLocation) && enemy.yPos / 64 == std::get<1>(gameState.heartLocation) && !enemy.isDead) 
+					{
 						std::cout << "enemy reached the heart";
-						//killing the enemy
+						// Kill the enemy
 						enemy.isDead = true;
-						//enemy.move(1920, 1920, gameState);
 
-						//-- health
+						// Reduce game health
 						--gameState.health;
-
 					}
 				}
 
-				
-
-				//selection render
-				select.playerTexture->render(select.xPos, select.yPos, gameState);
-
-
+				// Number of dead enemies - used to check whether the player has won
+				int enemiesDead{ 0 };
 				// Move each enemy to the next tile every few seconds
-				for (int i{ 0 }; i < gameState.enemyCount; ++i)
+				for (int i{ 0 }; i < enemies.size(); ++i)
 				{
 					if (!enemies[i].isDead)
 					{
@@ -927,37 +926,46 @@ int main(int argc, char* args[])
 							{
 								enemies[i].move(std::get<0>(gameState.enemyPath[j]) * 64, std::get<1>(gameState.enemyPath[j]) * 64, gameState);
 								++enemies[i].moveCount;
-								enemies[i].timeToMove += 2;
+								enemies[i].timeToMove += enemies[i].secondsPerMove;
 							}
 						}
 						enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
 					}
+					else
+					{
+						++enemiesDead;
+					}
 				}
 
+				// Check whether player has lost
 				if (gameState.health <= 0) 
 				{
 					std::cout << "You have failed!";
+					gameState.m_Timer.pause();
 				}
 
-				//Render timer
-				//timeTextTexture.render(0, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight() / 2), gameState);
+				// Check whether player has won
+				if (enemiesDead == enemies.size())
+				{
+					std::cout << "You have won!";
+					gameState.m_Timer.pause();
+				}
 
-				//Render resources amounts
+				// Render resources amounts
 				woodTextTexture.render(80, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				stoneTextTexture.render(80 + 100, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				ironTextTexture.render(80 + 200, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				gemTextTexture.render(80 + 300, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				heartTextTexture.render(80 + 450, gameState.m_SCREEN_HEIGHT + 10, gameState);
 
-
-				//characterTexture.render(gameState.m_TILE_SIDE_LENGTH * 2, gameState.m_TILE_SIDE_LENGTH * 3, gameState);
+				// Render the player
 				player.playerTexture->render(player.xPos, player.yPos, gameState);
 
+				// Render the selector
+				select.playerTexture->render(select.xPos, select.yPos, gameState);
 
 				//Update screen
 				SDL_RenderPresent(gameState.m_Renderer);
-
-
 			}
 		}
 	}
