@@ -657,7 +657,7 @@ int main(int argc, char* args[])
 								{
 									enemy.takeDamage(player.playerDamage, gameState);
 									--player.playerAttacksLeft;
-									std::cout << "Player attacked, attacks left: " << player.playerAttacksLeft << '\n';
+									//std::cout << "Player attacked, attacks left: " << player.playerAttacksLeft << '\n';
 								}
 							}
 							break;

@@ -370,3 +370,5 @@ libs/*
 
 # but not the folder itself
 !libs/.gitkeep
+
+docs/*
