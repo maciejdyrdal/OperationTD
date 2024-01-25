@@ -549,24 +549,32 @@ int main(int argc, char* args[])
 							case 21:
 							{
 								// Place a lava tower in the player's location
-								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
+								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding && gameState.woodAmount >= std::get<0>(gameState.lavaTowerCost) && gameState.stoneAmount >= std::get<1>(gameState.lavaTowerCost) && gameState.gemAmount >= std::get<2>(gameState.lavaTowerCost) && gameState.ironAmount >= std::get<3>(gameState.lavaTowerCost))
 								{
 									Tower tempTower{ towerBaseLavaPtr, player.xPos, player.yPos, 1, 10, 8 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+									gameState.woodAmount -= std::get<0>(gameState.lavaTowerCost);
+									gameState.stoneAmount -= std::get<1>(gameState.lavaTowerCost);
+									gameState.gemAmount -= std::get<2>(gameState.lavaTowerCost);
+									gameState.ironAmount -= std::get<3>(gameState.lavaTowerCost);
 								}
 								break;
 							}
 							case 12:
 							{
 								// Place a magic tower in the player's location
-								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
+								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding && gameState.woodAmount >= std::get<0>(gameState.magicTowerCost) && gameState.stoneAmount >= std::get<1>(gameState.magicTowerCost) && gameState.gemAmount >= std::get<2>(gameState.magicTowerCost) && gameState.ironAmount >= std::get<3>(gameState.magicTowerCost))
 								{
 									Tower tempTower{ towerBaseMagicPtr, player.xPos, player.yPos, 2, 5, 5 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+									gameState.woodAmount -= std::get<0>(gameState.magicTowerCost);
+									gameState.stoneAmount -= std::get<1>(gameState.magicTowerCost);
+									gameState.gemAmount -= std::get<2>(gameState.magicTowerCost);
+									gameState.ironAmount -= std::get<3>(gameState.magicTowerCost);
 								}
 								break;
 							}
@@ -608,8 +616,8 @@ int main(int argc, char* args[])
 				}
 
 				//Set text to be rendered
-				gameState.m_TimeText.str("");
-				gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
+				//gameState.m_TimeText.str("");
+				//gameState.m_TimeText << "Seconds since start time (s: start/stop, p: pause/unpause): " << (gameState.m_Timer.getTicks() / 1000.0f);
 
 				gameState.s_WoodAmountText.str("");
 				gameState.s_WoodAmountText << gameState.woodAmount;
@@ -965,18 +973,6 @@ int main(int argc, char* args[])
 				select.playerTexture->render(select.xPos, select.yPos, gameState);
 
 
-				// Render placed tower textures (deprecated)
-				//for (int x{ 0 }; x < gameState.m_SCREEN_WIDTH_TILE_COUNT; ++x)
-				//{
-				//	for (int y{ 0 }; y < gameState.m_SCREEN_HEIGHT_TILE_COUNT; ++y)
-				//	{
-				//		if (buildingTiles[x][y].hasBuilding)
-				//		{
-				//			buildingTiles[x][y].tileTexture->render(buildingTiles[x][y].xPos, buildingTiles[x][y].yPos, gameState);
-				//		}
-				//	}
-				//}
-
 				// Move each enemy to the next tile every few seconds
 				for (int i{ 0 }; i < gameState.enemyCount; ++i)
 				{
@@ -992,10 +988,6 @@ int main(int argc, char* args[])
 							}
 						}
 						enemies[i].enemyTexture->render(enemies[i].xPos, enemies[i].yPos, gameState);
-					}
-					else
-					{
-						//enemies[i].move(3000, 3000, gameState);
 					}
 				}
 
