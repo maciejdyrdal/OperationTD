@@ -759,9 +759,13 @@ int main(int argc, char* args[])
 				int tempVar = tempX * 10 + tempY;
 
 				gameState.s_WoodCostAmountText.str("");
+				gameState.s_WoodCostAmountText << " ";
 				gameState.s_StoneCostAmountText.str("");
+				gameState.s_StoneCostAmountText << " ";
 				gameState.s_IronCostAmountText.str("");
+				gameState.s_IronCostAmountText << " ";
 				gameState.s_GemCostAmountText.str("");
+				gameState.s_GemCostAmountText << " ";
 
 				switch (tempVar) {
 				case 11:
