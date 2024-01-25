@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 #include "Texture.h"
+#include "GameState.h"
 
 class Tower
 {
@@ -20,7 +21,7 @@ public:
 	int dps;
 	int attacksPerSec;
 
-	int dealDamage(Enemy& enemy);
+	int dealDamage(Enemy& enemy, GameState& gameState);
 };
 
 #endif // !TOWER_H

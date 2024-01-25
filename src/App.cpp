@@ -513,7 +513,7 @@ int main(int argc, char* args[])
 						//action
 						
 						case SDLK_r:
-							//mozna skrocic
+							// A roundabout method of checking the location of the selector and choosing the appropriate tower to place
 							int tempX = (select.xPos - gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT)/64 + 1;
 							int tempY = (select.yPos - gameState.s_PANEL_TILE_SIDE_LENGTH)/64 + 1;
 
@@ -524,12 +524,16 @@ int main(int argc, char* args[])
 							case 11:
 							{
 								// Place an arrow tower in the player's location
-								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding)
+								if (!buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding && gameState.woodAmount >= std::get<0>(gameState.arrowTowerCost) && gameState.stoneAmount >= std::get<1>(gameState.arrowTowerCost) && gameState.gemAmount >= std::get<2>(gameState.arrowTowerCost) && gameState.ironAmount >= std::get<3>(gameState.arrowTowerCost))
 								{
 									Tower tempTower{ towerBaseArrowPtr, player.xPos, player.yPos, 3, 2, 3 };
 									towers.push_back(tempTower);
 
 									buildingTiles[player.xPos / 64][player.yPos / 64].hasBuilding = true;
+									gameState.woodAmount -= std::get<0>(gameState.arrowTowerCost);
+									gameState.stoneAmount -= std::get<1>(gameState.arrowTowerCost);
+									gameState.gemAmount -= std::get<2>(gameState.arrowTowerCost);
+									gameState.ironAmount -= std::get<3>(gameState.arrowTowerCost);
 								}
 								break;
 							}	
@@ -563,8 +567,6 @@ int main(int argc, char* args[])
 								break;
 
 							}
-
-						
 						}
 
 
@@ -679,15 +681,15 @@ int main(int argc, char* args[])
 				{
 					for (Tower &tower : towers)
 					{
+						int attacksMade{ 0 };
 						for (Enemy &enemy : enemies)
 						{
-							tower.dealDamage(enemy);
-							//enemy.takeDamage(tower.dps);
+							if (attacksMade < tower.attacksPerSec && !enemy.isDead)
+							{
+								tower.dealDamage(enemy, gameState);
+								++attacksMade;
+							}
 							std::cout << "Enemy's health is " << enemy.getHp() << '\n';
-							//std::cout << enemy.isDead << '\n';
-
-							//std::cout << towers.size() << '\n';
-
 						}
 					}
 					++attacksMade;
@@ -750,7 +752,7 @@ int main(int argc, char* args[])
 					}
 					else
 					{
-						enemies[i].move(3000, 3000, gameState);
+						//enemies[i].move(3000, 3000, gameState);
 					}
 				}
 

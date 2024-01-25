@@ -1,18 +1,37 @@
 #include "Enemy.h"
 
 #include "GameState.h"
+#include "Random.h"
 
 Enemy::Enemy(Texture* enemyTexture, int xPos, int yPos, int hp, int timeToMove)
-	: enemyTexture{ enemyTexture }, xPos{ xPos }, yPos{ yPos }, hp{ hp }, timeToMove{ timeToMove } {}
+	: enemyTexture{ enemyTexture }, xPos{ xPos }, yPos{ yPos }, hp{ hp }, timeToMove{ timeToMove } 
+{
+	maxHp = hp;
+}
 
 Enemy::~Enemy() {}
 
-int Enemy::takeDamage(int damage)
+int Enemy::takeDamage(int damage, GameState& gameState)
 {
-	if (damage >= hp)
+	if (damage >= hp && !isDead)
 	{
 		hp = 0;
 		isDead = true;
+		if (maxHp >= 10)
+		{
+			gameState.woodAmount += Random::get(maxHp - 10, maxHp + 10);
+			gameState.stoneAmount += Random::get(maxHp - 10, maxHp + 10);
+			gameState.gemAmount += Random::get(maxHp - 10, maxHp + 10);
+			gameState.ironAmount += Random::get(maxHp - 10, maxHp + 10);
+		}
+		else
+		{
+			gameState.woodAmount += Random::get(0, maxHp + 10);
+			gameState.stoneAmount += Random::get(0, maxHp + 10);
+			gameState.gemAmount += Random::get(0, maxHp + 10);
+			gameState.ironAmount += Random::get(0, maxHp + 10);
+		}
+		
 	}
 	else
 	{

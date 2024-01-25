@@ -18,7 +18,7 @@ public:
 	~Enemy();
 
 	// Deals damage to enemy and returns its health afterwards
-	int takeDamage(int damage);
+	int takeDamage(int damage, GameState& gameState);
 
 	int getHp();
 
@@ -31,6 +31,8 @@ public:
 	bool isDead{ false };
 private:
 	int hp;
+
+	int maxHp;
 
 };
 
