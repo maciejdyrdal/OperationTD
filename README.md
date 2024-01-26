@@ -33,11 +33,11 @@ The player is able to upgrade their character's damage from the same menu as the
 This screen contains the game instructions and is the first thing the player sees on startup.
 
 ### Game window:
-![image](https://github.com/maciejdyrdal/OperationTD/assets/64736385/a6e1a730-9564-4a0e-8791-b4b307193b53)
+![image](https://github.com/maciejdyrdal/OperationTD/assets/64736385/704906bc-cefd-4b14-aae4-973ae182bb32)
 This is the game window, it is here that the gameplay takes place. The player can move around with the protagonist, place towers and attack (though only a limited number of times).
 
 ### Result screen:
-![image](https://github.com/maciejdyrdal/OperationTD/assets/64736385/f70ab578-14cf-4605-b1c2-29e090f4d024)
+![image](https://github.com/maciejdyrdal/OperationTD/assets/64736385/457ffb86-6457-424c-9f22-1f61609ea072)
 This is the screen displayed at the end of the game, either signifying victory or failure. The game pauses at that point and the user must close the window and start the game again if they wish to play another round.
 
 ## Documentation
