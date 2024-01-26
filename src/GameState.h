@@ -84,6 +84,9 @@ public:
 	// Resource costs of each upgrade
 	std::tuple<int, int, int, int> damageUpgradeCost{ 1, 1, 3, 5 };
 
+	// Multiplier of the player damage upgrade cost
+	int damageUpgradeModifier{ 1 };
+
 	// Hit points which get reduced whenever an enemy reaches the end tile; lowering this value to 0 means the player has lost the game
 	int health = 10;
 
