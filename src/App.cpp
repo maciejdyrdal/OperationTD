@@ -440,6 +440,7 @@ int main(int argc, char* args[])
 		Texture stoneCostAmountTexture{};
 		Texture ironCostAmountTexture{};
 		Texture gemCostAmountTexture{};
+		Texture swordSwipeTextTexture{};
 
 
 		// Initialize the texture pointers for the player character, enemies and towers
@@ -744,49 +745,8 @@ int main(int argc, char* args[])
 					}
 				}
 
-				// Set text to be rendered
-				gameState.s_WoodAmountText.str("");
-				gameState.s_WoodAmountText << gameState.woodAmount;
-
-				gameState.s_StoneAmountText.str("");
-				gameState.s_StoneAmountText << gameState.stoneAmount;
 				
-				gameState.s_IronAmountText.str("");
-				gameState.s_IronAmountText << gameState.ironAmount;
 
-				gameState.s_GemAmountText.str("");
-				gameState.s_GemAmountText << gameState.gemAmount;
-
-				gameState.s_HealthAmountText.str("");
-				gameState.s_HealthAmountText << gameState.health;
-
-
-
-				// Render text
-				if (!woodTextTexture.loadFromRenderedText(gameState.s_WoodAmountText.str().c_str(), textColor, gameState))
-				{
-					PLOG_ERROR << "Unable to render time texture!\n";
-				}
-
-				if (!stoneTextTexture.loadFromRenderedText(gameState.s_StoneAmountText.str().c_str(), textColor, gameState))
-				{
-					PLOG_ERROR << "Unable to render time texture!\n";
-				}
-
-				if (!ironTextTexture.loadFromRenderedText(gameState.s_IronAmountText.str().c_str(), textColor, gameState))
-				{
-					PLOG_ERROR << "Unable to render time texture!\n";
-				}
-
-				if (!gemTextTexture.loadFromRenderedText(gameState.s_GemAmountText.str().c_str(), textColor, gameState))
-				{
-					PLOG_ERROR << "Unable to render time texture!\n";
-				}
-
-				if (!heartTextTexture.loadFromRenderedText(gameState.s_HealthAmountText.str().c_str(), textColor, gameState))
-				{
-					PLOG_ERROR << "Unable to render time texture!\n";
-				}
 				
 
 				// Clear screen
@@ -1008,7 +968,57 @@ int main(int argc, char* args[])
 					}
 				}
 
-				
+				// Set text to be rendered
+				gameState.s_WoodAmountText.str("");
+				gameState.s_WoodAmountText << gameState.woodAmount;
+
+				gameState.s_StoneAmountText.str("");
+				gameState.s_StoneAmountText << gameState.stoneAmount;
+
+				gameState.s_IronAmountText.str("");
+				gameState.s_IronAmountText << gameState.ironAmount;
+
+				gameState.s_GemAmountText.str("");
+				gameState.s_GemAmountText << gameState.gemAmount;
+
+				gameState.s_HealthAmountText.str("");
+				gameState.s_HealthAmountText << gameState.health;
+
+				gameState.s_swordSwipeText.str("");
+				gameState.s_swordSwipeText << player.playerAttacksLeft;
+
+
+
+				// Render text
+				if (!woodTextTexture.loadFromRenderedText(gameState.s_WoodAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!stoneTextTexture.loadFromRenderedText(gameState.s_StoneAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!ironTextTexture.loadFromRenderedText(gameState.s_IronAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!gemTextTexture.loadFromRenderedText(gameState.s_GemAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!heartTextTexture.loadFromRenderedText(gameState.s_HealthAmountText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
+
+				if (!swordSwipeTextTexture.loadFromRenderedText(gameState.s_swordSwipeText.str().c_str(), textColor, gameState))
+				{
+					PLOG_ERROR << "Unable to render time texture!\n";
+				}
 
 				// Render resources amounts
 				woodTextTexture.render(80, gameState.m_SCREEN_HEIGHT + 10, gameState);
@@ -1016,6 +1026,7 @@ int main(int argc, char* args[])
 				ironTextTexture.render(80 + 200, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				gemTextTexture.render(80 + 300, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				heartTextTexture.render(80 + 450, gameState.m_SCREEN_HEIGHT + 10, gameState);
+				swordSwipeTextTexture.render(80 + 600, gameState.m_SCREEN_HEIGHT + 10, gameState);
 
 
 

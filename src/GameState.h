@@ -54,6 +54,7 @@ public:
 	std::stringstream s_IronAmountText;
 	std::stringstream s_GemAmountText;
 	std::stringstream s_HealthAmountText;
+	std::stringstream s_swordSwipeText;
 
 	// Resource cost text streams
 	std::stringstream s_WoodCostAmountText;
