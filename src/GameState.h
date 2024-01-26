@@ -74,13 +74,13 @@ public:
 	// Starting amounts of building resources 
 	int woodAmount = 5;
 	int stoneAmount = 5;
-	int ironAmount = 3;
 	int gemAmount = 0;
+	int ironAmount = 3;
 
 	// Resource costs of each tower
 	std::tuple<int, int, int, int> arrowTowerCost{ 3, 1, 0, 0 };
-	std::tuple<int, int, int, int> lavaTowerCost{ 2, 5, 3, 0 };
-	std::tuple<int, int, int, int> magicTowerCost{ 2, 2, 1, 5 };
+	std::tuple<int, int, int, int> lavaTowerCost{ 2, 5, 0, 3 };
+	std::tuple<int, int, int, int> magicTowerCost{ 2, 2, 5, 1 };
 
 	// Resource costs of each upgrade
 	std::tuple<int, int, int, int> damageUpgradeCost{ 1, 1, 3, 5 };

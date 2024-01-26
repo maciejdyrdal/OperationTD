@@ -721,37 +721,9 @@ int main(int argc, char* args[])
 								break;
 							}
 						}
-
-						////Start/stop
-						//if (e.key.keysym.sym == SDLK_o)
-						//{
-						//	if (gameState.m_Timer.isStarted())
-						//	{
-						//		gameState.m_Timer.stop();
-						//	}
-						//	else
-						//	{
-						//		gameState.m_Timer.start();
-						//	}
-						//}
-						////Pause/unpause
-						//else if (e.key.keysym.sym == SDLK_p)
-						//{
-						//	if (gameState.m_Timer.isPaused())
-						//	{
-						//		gameState.m_Timer.unpause();
-						//	}
-						//	else
-						//	{
-						//		gameState.m_Timer.pause();
-						//	}
-						//}
 					}
 				}
 
-				
-
-				
 
 				// Clear screen
 				SDL_SetRenderDrawColor(gameState.m_Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
