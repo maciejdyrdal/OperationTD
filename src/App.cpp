@@ -90,7 +90,7 @@ bool init(GameState& gameState)
 // Therefore, the loadMedia() function has over 20 arguments with the texture names
 // They could be stored in an std::array or C-style array, but our soultion is (arguably) more readable
 //  - the textures are referred to by their variable names instead of indexed array elements 
-bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSwordTexture, Texture& woodIconTexture, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture, Texture& menuTexture, Texture& victoryScreen, Texture& failureScreen)
+bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTexture, Texture& characterTexture, Texture& towerTexture, Texture& panelSelectionTexture, Texture& selectionTile, Texture& enemyTexture, Texture& gemIconTexture, Texture& ironIconTexture, Texture& stoneIconTexture, Texture& goblin, Texture& knight, Texture& smallGoblin, Texture& towerBaseArrowTexture, Texture& towerBaseLavaTexture, Texture& towerBaseMagicTexture, Texture& stoneRoadTexture, Texture& protagonist, Texture& towersText, Texture& upgradesText, Texture& upgradeSwordTexture, Texture& woodIconTexture, Texture& bottomTexture, Texture& rightTexture, Texture& heart, Texture& heartIconTexture, Texture& assasinTexture, Texture& menuTexture, Texture& victoryScreen, Texture& failureScreen, Texture& swordSwipeIconTexture)
 {
 	//Loading success flag
 	bool successfullyLoaded = true;
@@ -272,6 +272,13 @@ bool loadMedia(GameState& gameState, Texture& textTexture, Texture& groundTextur
 		successfullyLoaded = false;
 	}
 
+	if (!swordSwipeIconTexture.loadFromFile(gameState.m_textureFilenames[29], gameState))
+	{
+		PLOG_ERROR << "Failed to load texture image " << gameState.m_textureFilenames[29] << "!\n";
+		successfullyLoaded = false;
+	}
+
+
 	PLOG_INFO << "Successfiully loaded media.";
 	return successfullyLoaded;
 }
@@ -402,6 +409,7 @@ int main(int argc, char* args[])
 		Texture gemIconTexture{};
 		Texture ironIconTexture{};
 		Texture stoneIconTexture{};
+		Texture swordSwipeTexture{};
 		
 		// Road textures
 		Texture stoneRoadTexture{};
@@ -514,7 +522,7 @@ int main(int argc, char* args[])
 		generateSelectionTiles(selections, gameState);
 
 		// Load media
-		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelectionTexture, selectionTile, enemyTexture, gemIconTexture, ironIconTexture, stoneIconTexture, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrowTexture, towerBaseLavaTexture, towerBaseMagicTexture, stoneRoadTexture, protagonistTexture, towersText, uprgadesText, upgradeSwordTexture, woodIconTexture, bottomTexture, rightTexture, heartRoadTexture, heartIconTexture, assasinTexture, menuTexture, victoryScreen, failureScreen))
+		if (!loadMedia(gameState, textTexture, groundTexture, characterTexture, towerTexture, panelSelectionTexture, selectionTile, enemyTexture, gemIconTexture, ironIconTexture, stoneIconTexture, goblinTexture, knightTexture, smallGoblinTexture, towerBaseArrowTexture, towerBaseLavaTexture, towerBaseMagicTexture, stoneRoadTexture, protagonistTexture, towersText, uprgadesText, upgradeSwordTexture, woodIconTexture, bottomTexture, rightTexture, heartRoadTexture, heartIconTexture, assasinTexture, menuTexture, victoryScreen, failureScreen, swordSwipeTexture))
 		{
 			PLOG_ERROR << "Failed to load media!\n";
 		}
@@ -801,6 +809,8 @@ int main(int argc, char* args[])
 				ironIconTexture.render(40 + 200, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				gemIconTexture.render(40 + 300, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
 				heartIconTexture.render(40 + 450, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 5, gameState);
+				swordSwipeTexture.render(40 + 600, gameState.m_SCREEN_HEIGHT + (textTexture.getHeight()) + 2, gameState);
+
 
 				//Render the selection panel 
 				towersText.render(gameState.m_TILE_SIDE_LENGTH* gameState.m_SCREEN_WIDTH_TILE_COUNT, 0, gameState);
@@ -995,6 +1005,8 @@ int main(int argc, char* args[])
 				ironTextTexture.render(80 + 200, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				gemTextTexture.render(80 + 300, gameState.m_SCREEN_HEIGHT + 10, gameState);
 				heartTextTexture.render(80 + 450, gameState.m_SCREEN_HEIGHT + 10, gameState);
+
+
 
 				// Render the player
 				player.playerTexture->render(player.xPos, player.yPos, gameState);

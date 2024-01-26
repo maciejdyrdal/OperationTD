@@ -62,7 +62,7 @@ public:
 	std::stringstream s_GemCostAmountText;
 
 	// Array containing the filenames of textures to be loaded
-	const std::array<std::string, 29> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png", "img/stoneRoad.png", "img/protagonist.png", "img/towersText.png", "img/upgradesText.png", "img/upgradeSword.png", "img/wood_icon.png", "img/bottomTexture.png", "img/rightTexture.png", "img/heart.png", "img/heart_icon.png", "img/assasin.png", "img/menu.png", "img/victoryScreen.png", "img/failureScreen.png"};
+	const std::array<std::string, 30> m_textureFilenames{ "img/ground.png", "img/character.png", "img/tower.png", "img/panelSelection.png", "img/selectionTile.png", "img/enemy.png", "img/gem_icon.png", "img/iron_icon.png", "img/stone_icon.png", "img/goblin.png", "img/knight.png", "img/smallGoblin.png", "img/towerBaseArrow.png", "img/towerBaseLava.png", "img/towerBaseMagic.png", "img/stoneRoad.png", "img/protagonist.png", "img/towersText.png", "img/upgradesText.png", "img/upgradeSword.png", "img/wood_icon.png", "img/bottomTexture.png", "img/rightTexture.png", "img/heart.png", "img/heart_icon.png", "img/assasin.png", "img/menu.png", "img/victoryScreen.png", "img/failureScreen.png", "img/swordSwipe_icon.png"};
 	
 	// Number of each type of enemy
 	int smallGoblinCount{ 20 };
