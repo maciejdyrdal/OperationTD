@@ -692,8 +692,19 @@ int main(int argc, char* args[])
 								break;
 							}
 							case 14:
-								// Upgrage player sword
-								std::cout << "UPGRADE COMPLETED" << '\n';
+								// Upgrage player sword damage
+								if (gameState.woodAmount >= std::get<0>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier && gameState.stoneAmount >= std::get<1>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier && gameState.gemAmount >= std::get<2>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier && gameState.ironAmount >= std::get<3>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier)
+								{
+									player.playerDamage += player.playerDamage / gameState.damageUpgradeModifier;
+									++gameState.damageUpgradeModifier;
+
+									gameState.woodAmount -= std::get<0>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+									gameState.stoneAmount -= std::get<1>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+									gameState.gemAmount -= std::get<2>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+									gameState.ironAmount -= std::get<3>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+
+									std::cout << "UPGRADE COMPLETED" << '\n';
+								}
 								break;
 							}
 						}
@@ -879,10 +890,10 @@ int main(int argc, char* args[])
 					gemIconTexture.render(gameState.m_TILE_SIDE_LENGTH * gameState.m_SCREEN_WIDTH_TILE_COUNT + 20, 5 * gameState.s_PANEL_TILE_SIDE_LENGTH + 100, gameState);
 
 					// Render cost
-					gameState.s_WoodCostAmountText << std::get<0>(gameState.damageUpgradeCost);
-					gameState.s_StoneCostAmountText << std::get<1>(gameState.damageUpgradeCost);
-					gameState.s_IronCostAmountText << std::get<2>(gameState.damageUpgradeCost);
-					gameState.s_GemCostAmountText << std::get<3>(gameState.damageUpgradeCost);
+					gameState.s_WoodCostAmountText << std::get<0>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+					gameState.s_StoneCostAmountText << std::get<1>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+					gameState.s_IronCostAmountText << std::get<2>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
+					gameState.s_GemCostAmountText << std::get<3>(gameState.damageUpgradeCost) * gameState.damageUpgradeModifier;
 					
 					break;
 				}
@@ -1004,15 +1015,15 @@ int main(int argc, char* args[])
 
 				// Check whether player has lost
 				if (gameState.health <= 0)
-				{
-					std::cout << "You have failed!";
+				{	
+					failureScreen.render((gameState.m_SCREEN_WIDTH + gameState.s_SCREEN_PANEL_WIDTH) / 2 - 224, (gameState.m_SCREEN_HEIGHT + 50) / 2 - 96, gameState);
 					gameState.m_Timer.pause();
 				}
 
 				// Check whether player has won
 				if (enemiesDead == enemies.size())
 				{
-					std::cout << "You have won!";
+					victoryScreen.render((gameState.m_SCREEN_WIDTH + gameState.s_SCREEN_PANEL_WIDTH) / 2 - 224, (gameState.m_SCREEN_HEIGHT + 50) / 2 - 96, gameState);
 					gameState.m_Timer.pause();
 				}
 
